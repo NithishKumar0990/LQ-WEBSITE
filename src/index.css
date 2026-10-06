@@ -1,0 +1,41 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    color: #4A4034;
+    background-color: #FFFFFF;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto Slab', serif;
+    color: #000000;
+  }
+
+  .bg-navy h1, .bg-navy h2, .bg-navy h3, .bg-navy h4, .bg-navy h5, .bg-navy h6,
+  [class*="from-navy"] h1, [class*="from-navy"] h2, [class*="from-navy"] h3, [class*="from-navy"] h4, [class*="from-navy"] h5, [class*="from-navy"] h6,
+  [class*="from-primary"] h1, [class*="from-primary"] h2, [class*="from-primary"] h3, [class*="from-primary"] h4, [class*="from-primary"] h5, [class*="from-primary"] h6,
+  [class*="bg-primary"] h1, [class*="bg-primary"] h2, [class*="bg-primary"] h3, [class*="bg-primary"] h4, [class*="bg-primary"] h5, [class*="bg-primary"] h6 {
+    color: #FFD966;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
