@@ -37,8 +37,8 @@ export default function BlogPostPage() {
 
       <main className="min-h-screen bg-lightBg">
         {/* ---------- SECTION: Top Breadcrumb & Hero ---------- */}
-        <section className="bg-gradient-to-br from-navy via-[#4D3017] to-primary text-white py-16 lg:py-20 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#F4C542_1px,transparent_1px)] [background-size:16px_16px]" />
+        <section className="bg-gradient-to-br from-brand-earth-900 to-brand-earth-600 text-white py-16 lg:py-20 relative overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#FFC91B_1px,transparent_1px)] [background-size:16px_16px]" />
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <Link
               to="/blog"

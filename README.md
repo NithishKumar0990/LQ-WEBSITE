@@ -43,23 +43,23 @@ A production-ready, high-performance Single Page Application (SPA) built for **L
 
 ## 🎨 Design System & Brand Colors
 
-The UI strictly adheres to the LQSIPL brand guidelines. Below is the core color palette used throughout the application:
+The UI strictly adheres to the LQSIPL brand guidelines defined in [COLOR-SYSTEM.md](COLOR-SYSTEM.md). Below is the core color palette used throughout the application:
 
-| Color Name | Hex Code | Role / Usage |
-| :--- | :--- | :--- |
-| **Dark Brown** *(Primary)* | `#5A3A1E` | Nav, header, banners, primary buttons, icons, section headings |
-| **Darker Brown** | `#3E2712` | Footer bg, top bar, dark sections, brown hover states |
-| **Lighter Brown** | `#7B5533` | Gradient ends, secondary accents |
-| **Golden Yellow** *(Accent)*| `#F4C542` | CTA buttons, highlights, icons, underlines, active nav states |
-| **Light Yellow** *(Highlight)*| `#FFD966` | Hover accents, footer headings, badge highlights |
-| **Black** | `#000000` | All primary heading text |
-| **White** | `#FFFFFF` | Main page background |
-| **Body Text** | `#4A4034` | Warm gray-brown body text |
-| **Soft Section Bg** | `#FAF6F0` | Alternating section backgrounds |
-| **Card Borders** | `#EFE7DB` | Borders, subtle dividers, cards |
-| **Light Warm Surface** | `#F5EFE6` | Footer body text, light warm surface panels |
-| **Muted Text** | `#8A7B6C` | Captions, metadata, secondary text |
-| **WhatsApp Green** | `#25D366` | Floating WhatsApp widget (Official brand color) |
+| Color Name | Token | Hex Code | Role / Usage |
+| :--- | :--- | :--- | :--- |
+| **Earth 600** *(Primary)* | `brand.earth.600` | `#986B14` | Nav, header, banners, primary buttons, icons |
+| **Earth 900** *(Deep Canvas)*| `brand.earth.900` | `#3E2A08` | Footer bg, top bar, dark sections, hero gradient start |
+| **Earth 500** | `brand.earth.500` | `#B1831F` | Gradient ends, secondary accents |
+| **Pollen 400** *(Attention)* | `brand.pollen.400` | `#FFC91B` | CTA buttons, highlights, icons, underlines, active nav |
+| **Pollen 300** *(Highlight)* | `brand.pollen.300` | `#FFDC4F` | Headings/text on dark brown, badge highlights |
+| **Pollen 200** | `brand.pollen.200` | `#FFE684` | Light highlight badge |
+| **Black** | — | `#000000` | Primary heading text on light backgrounds |
+| **White** | — | `#FFFFFF` | Main page background, card surfaces, body text on dark |
+| **Neutral 600** *(Body Text)*| `brand.neutral.600`| `#5A4D3D` | Primary readable body prose |
+| **Neutral 50** *(Soft Bg)* | `brand.neutral.50` | `#FAF8F5` | Alternating section backgrounds |
+| **Neutral 200** *(Borders)* | `brand.neutral.200`| `#E2DACC` | Borders, subtle dividers, cards |
+| **Neutral 500** *(Muted)* | `brand.neutral.500`| `#7C6B55` | Captions, metadata, secondary text |
+| **WhatsApp Green** | — | `#25D366` | Floating WhatsApp widget (Official brand color) |
 
 ---
 

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Digital Twins in Saudi Arabia — Oxigen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/mxs8gny.css">
+<style>
+  :root {
+    color-scheme: dark;
+    --ink: #f4f2ee; --muted: #b3afa6; --gold: #c9a96a; --bg: #112228;
+    --sans: 'articulat-cf','Articulat CF','Manrope', sans-serif;
+    --serif: 'iowan-old-style-bt','Iowan Old Style','Newsreader', Georgia, serif;
+    --mono: 'Roboto Mono', monospace;
+    --light: #ECEEEE; --soft: #C4CDCD; --teal: #6E9EA4; --quiet: #7E8E90;
+    --rule: rgba(236,238,238,.28);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :focus-visible { outline: 2px solid #6E9EA4; outline-offset: 3px; }   /* visible keyboard focus (a11y) */
+  html { scrollbar-width: none; overflow-x: clip; }   /* overflow-x: clip stops iOS Safari horizontal pan without breaking sticky */
+  html::-webkit-scrollbar { width: 0; height: 0; display: none; }
+  body { width: 100%; background: var(--bg); overflow-x: clip; -webkit-font-smoothing: antialiased; }   /* clip (not hidden) so body isn't a scroll container -> preserves position:sticky (CEO section) */
+  canvas { display: block; }
+
+  /* reading progress */
+  .read-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--teal); z-index: 50; }
+
+  /* ---- header (same as home) ---- */
+  .navbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: clamp(18px, 2.3vw, 32px) clamp(20px, 3vw, 48px); pointer-events: none;
+  }
+  .brand { display: flex; align-items: center; text-decoration: none; pointer-events: auto; }
+  .ox-logo { height: 22px; width: auto; color: var(--light); display: block; transition: color .45s ease; }
+  .nav-links { display: flex; align-items: center; gap: 0.6rem; pointer-events: auto; }
+  .nav-btn {
+    display: inline-flex; align-items: center; text-decoration: none; color: var(--light);
+    font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    border: 1px solid var(--rule); padding: 13px 20px; white-space: nowrap;
+    transition: background .25s, color .25s, border-color .25s;
+  }
+  .nav-btn:hover { background: var(--light); color: var(--bg); border-color: var(--light); }
+  .navbar.on-light .ox-logo { color: #14201f; }
+  .navbar.on-light .nav-btn { color: #14201f; border-color: rgba(20,32,31,.34); }
+  .navbar.on-light .nav-btn:hover { background: #14201f; color: #fff; border-color: #14201f; }
+  @media (max-width: 560px) {
+    .nav-links { gap: 0.4rem; }
+    .nav-btn { padding: 9px 12px; font-size: 11px; letter-spacing: .05em; }
+  }
+
+  /* ---- article ---- */
+  .article-hero {
+    position: relative; background-color: var(--bg);
+    background-image: linear-gradient(180deg, rgba(11,24,28,0.58) 0%, rgba(17,34,40,0.22) 24%, rgba(17,34,40,0.72) 45%, rgba(17,34,40,0.9) 66%, rgba(17,34,40,0.98) 100%), url('twin.jpg');
+    background-size: cover; background-position: center;
+    min-height: clamp(460px, 78vh, 820px);
+    display: flex; align-items: flex-end;
+    padding: clamp(120px, 16vh, 200px) 24px clamp(54px, 8vh, 92px);
+  }
+  .ah-inner { max-width: 840px; margin: 0 auto; width: 100%; }
+  .eyebrow { font: 400 0.72rem/1 var(--mono); letter-spacing: 0.28em; text-transform: uppercase; color: var(--teal); display: inline-block; margin-bottom: 1.5rem; }
+  .article-title { font-family: var(--sans); font-weight: 700; color: #f1ede4; font-size: clamp(2.05rem, 4.6vw, 3.7rem); line-height: 1.06; letter-spacing: -0.02em; max-width: 20ch; }
+  .article-meta { margin-top: 1.9rem; font: 400 0.74rem/1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: #7e8e90; }
+
+  .article-body { background: #f4f4f4; padding: clamp(54px, 8vh, 100px) 24px clamp(80px, 12vh, 150px); }
+  .ab-inner { max-width: 700px; margin: 0 auto; }
+  .ab-inner p { font: 400 1.16rem/1.78 var(--serif); color: #2b2b27; margin-bottom: 1.5rem; }
+  .ab-inner p.lead { font-size: 1.36rem; line-height: 1.64; color: #1b1b18; margin-bottom: 1.9rem; }
+  .ab-inner h2 { font-family: var(--sans); font-weight: 700; color: #14201f; font-size: clamp(1.5rem, 2.6vw, 2.05rem); line-height: 1.16; letter-spacing: -0.015em; margin: clamp(46px, 7vh, 80px) 0 1.3rem; }
+  .ab-inner h2:first-child { margin-top: 0; }
+  .ab-inner strong { font-weight: 700; color: #14201f; }
+  .ab-inner em { font-style: italic; }
+  .article-dek { font: 400 clamp(1.12rem, 1.7vw, 1.4rem)/1.5 var(--serif); color: #b3bcbc; max-width: 48ch; margin-top: 1.5rem; }
+  .ab-inner h3 { font-family: var(--sans); font-weight: 700; color: #14201f; font-size: clamp(1.18rem, 1.7vw, 1.42rem); line-height: 1.2; letter-spacing: -0.012em; margin: clamp(34px, 4.5vh, 52px) 0 0.9rem; }
+  .ab-inner h2 + h3 { margin-top: clamp(18px, 2.5vh, 28px); }
+
+  /* ---- footer (same as home) ---- */
+#footer { position: relative; z-index: 3; overflow: hidden; background: var(--bg); color: #c4cccc; padding: clamp(64px, 11vh, 140px) 6.5vw clamp(48px, 7vh, 84px); }
+  .ft-top { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 2.2rem 3rem; margin-bottom: clamp(40px, 6vh, 78px); }
+  .ft-headline { font-family: var(--serif); font-weight: 400; letter-spacing: -0.006em; font-size: clamp(1.7rem, 3vw, 2.7rem); line-height: 1.2; color: #ece8df; max-width: clamp(360px, 44vw, 680px); }
+  .ft-cta { display: flex; align-items: center; gap: clamp(14px, 1.8vw, 30px); white-space: nowrap; }
+  .ft-btn { display: inline-flex; align-items: center; gap: 0.7rem; background: #efeae1; color: #112228; font: 600 0.95rem/1 var(--sans); padding: 1.05rem 1.7rem; border-radius: 0; text-decoration: none; transition: background .25s ease; }
+  .ft-btn .arw { transition: transform .25s ease; }
+  .ft-btn:hover { background: #fff; }
+  .ft-btn:hover .arw { transform: translateX(4px); }
+  .ft-conv { font: 600 0.95rem/1 var(--sans); color: #aeb8b8; text-decoration: none; transition: color .25s ease; }
+  .ft-conv:hover { color: #fff; }
+  .ft-rule { border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: 0 0 clamp(34px, 5vh, 60px); }
+  .ft-cols { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 2.4rem; }
+  .ft-label { display: block; font: 500 0.7rem/1 var(--mono); letter-spacing: 0.28em; text-transform: uppercase; color: #7b8a8d; margin-bottom: 1.5rem; }
+  .ft-brand { font: 400 clamp(1rem, 1.2vw, 1.15rem)/1.5 var(--serif); color: #d9ddd9; max-width: 24ch; margin-bottom: 1.1rem; }
+  .ft-note { font: 400 0.78rem/1.5 var(--mono); letter-spacing: 0.03em; color: #7b8a8d; }
+  .ft-col a { display: block; width: max-content; font: 400 clamp(1rem, 1.15vw, 1.12rem)/1 var(--sans); color: #c4cccc; text-decoration: none; margin-bottom: 1rem; transition: color .2s ease; }
+  .ft-col a:hover { color: #fff; }
+  .ft-muted { display: block; font: 400 clamp(0.95rem, 1.1vw, 1.05rem)/1.5 var(--sans); color: #7b8a8d; }
+  @media (max-width: 820px) {
+    .ft-top { grid-template-columns: 1fr; align-items: start; }
+    .ft-cta { flex-wrap: wrap; }
+    .ft-cols { grid-template-columns: 1fr 1fr; gap: 2rem 1.5rem; }
+    .ft-headline { max-width: none; }
+  }
+  @media (max-width: 520px) { .ft-cols { grid-template-columns: 1fr; } }
+  /* big brand lockup at the foot of the footer */
+  .ft-brandmark { margin: clamp(64px, 10vh, 130px) 0 0; }
+  .ft-word { position: relative; aspect-ratio: 1641 / 427; }   /* reserves the logo's box at its normal size */
+  .ft-vox { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: calc(100% + 13vw); height: 165%; pointer-events: none; }   /* canvas bleeds past the logo (into the footer padding) so dispersing particles have room; logo stays full size, rendered centred */
+  .ft-wordmark { display: none; }
+  .ft-rule2 { border: 0; border-top: 1px solid rgba(255,255,255,0.12); margin: clamp(22px, 3.5vh, 44px) 0 clamp(16px, 2.2vh, 26px); }
+  .ft-legal { text-align: center; font: 400 0.78rem/1.6 var(--mono); letter-spacing: 0.06em; color: #7b8a8d; }
+  @media (max-width: 640px) { .ft-legal .ft-dot { display: none; } .ft-legal .ft-made { display: block; } }   /* phone: drop the middot, break the credit to its own line */
+  .ft-legal a { color: #7b8a8d; text-decoration: none; transition: color .2s ease; }
+  .ft-legal a:hover { color: #fff; }
+  /* pixel-dissolve page transition */
+  #px-tx { position: fixed; inset: 0; z-index: 99999; pointer-events: none; display: none; overflow: hidden; }
+  #px-tx .px-panel { position: absolute; inset: 0; transform: translateY(100%); will-change: transform; }
+  #px-tx .px-p1 { background: #6E9EA4; }
+  #px-tx .px-p2 { background: #112228; }
+  html.px-cover::before { content: ''; position: fixed; inset: 0; background: #112228; z-index: 99998; }
+</style>
+<script>if(sessionStorage.getItem('pxnav')){document.documentElement.classList.add('px-cover');setTimeout(function(){document.documentElement.classList.remove('px-cover');},1600);}</script>
+<meta name="description" content="Why the Kingdom's transformation is creating unprecedented demand for digital replicas of its cities, industries, and infrastructure.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Oxigen">
+<meta property="og:title" content="Digital Twins in Saudi Arabia: The Opportunity You Cannot Afford to Miss">
+<meta property="og:description" content="Why the Kingdom's transformation is creating unprecedented demand for digital replicas of its cities, industries, and infrastructure.">
+<meta property="og:image" content="/twin.jpg">
+<meta property="og:image:width" content="1600">
+<meta property="og:image:height" content="900">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Digital Twins in Saudi Arabia: The Opportunity You Cannot Afford to Miss">
+<meta name="twitter:description" content="Why the Kingdom's transformation is creating unprecedented demand for digital replicas of its cities, industries, and infrastructure.">
+<meta name="twitter:image" content="/twin.jpg">
+</head>
+<body>
+<div class="read-progress" id="readbar"></div>
+<nav class="navbar" aria-label="Primary">
+  <a class="brand" href="/" aria-label="Oxigen">
+    <svg class="ox-logo" viewBox="139.0 326.0 1641.0 427.0" role="img" aria-label="Oxigen" xmlns="http://www.w3.org/2000/svg"><path d="M151.67,490.31c0-82.44,67.76-151.9,151.33-151.9s151.33,69.46,151.33,151.9-68.33,151.9-151.33,151.9-151.33-69.46-151.33-151.9ZM365.11,490.31c0-41.22-27.11-71.15-62.11-71.15s-62.11,29.93-62.11,71.15,26.54,71.15,62.11,71.15,62.11-29.93,62.11-71.15Z" fill="currentColor"/><path d="M524.32,486.92l-65.28-140.6h97.69l34.39,82.44,60.48-82.44h94.87l-109.77,140.6,70.42,147.38h-99.38l-38.01-88.09-65.89,88.09h-96.56l117.06-147.38Z" fill="currentColor"/><path d="M758.33,346.32h89.22l-45.57,287.98h-89.22l45.57-287.98Z" fill="currentColor"/><path d="M862.59,646.72l91.48-4.52c4.52,10.73,19.76,23.72,46.87,23.72,32.75,0,53.64-19.2,53.64-51.95v-22.59h-2.82c-8.47,10.16-31.62,29.36-70.02,29.36-71.15,0-131.57-62.11-131.57-141.73s60.42-140.6,129.88-140.6c41.22,0,68.89,20.89,81.88,36.14h2.82l13.55-28.23h65.5v263.14c0,79.62-54.21,132.13-142.3,132.13-105.03,0-134.39-72.84-138.91-94.86ZM1054.58,480.15c0-38.4-26.54-65.5-57.6-65.5s-57.6,27.11-57.6,65.5,25.98,65.5,57.6,65.5,57.6-27.67,57.6-65.5Z" fill="currentColor"/><path d="M1169.21,490.31c0-82.44,67.76-151.9,150.2-151.9s145.69,65.5,145.69,146.82c0,15.81-1.69,27.1-3.39,32.75h-205.54c9.03,32.19,32.19,49.13,62.68,49.13,28.24,0,43.48-14.68,48.56-20.33l89.22,3.95c-15.25,40.66-63.24,91.48-136.65,91.48-84.14,0-150.77-68.33-150.77-151.9ZM1380.4,462.64c-6.78-28.8-30.49-50.25-62.11-50.25-29.93,0-54.21,18.63-62.68,50.25h124.79Z" fill="currentColor"/><path d="M1490.51,346.32h66.07l12.99,28.23h2.82c7.91-10.16,36.7-36.14,80.75-36.14,68.33,0,115.19,49.13,115.19,124.23v171.66h-89.22v-160.37c0-29.93-20.89-53.08-49.69-53.08s-49.69,23.15-49.69,53.08v160.37h-89.22v-287.98Z" fill="currentColor"/></svg>
+  </a>
+  <div class="nav-links">
+    <a class="nav-btn" href="/contact">Contact</a>
+  </div>
+</nav>
+
+<main>
+<article>
+  <header class="article-hero">
+    <div class="ah-inner">
+      <span class="eyebrow">Research &amp; Articles</span>
+      <h1 class="article-title">Digital Twins in Saudi Arabia: The Opportunity You Cannot Afford to Miss</h1>
+      <p class="article-dek">Why the Kingdom's Transformation Is Creating Unprecedented Demand for Virtual Intelligence</p>
+      <p class="article-meta">Field note &middot; June 2026 &middot; 6 min read</p>
+    </div>
+  </header>
+  <div class="article-body">
+    <div class="ab-inner">
+      <p class="lead">Saudi Arabia is in the middle of one of the most ambitious economic transformations in modern history. Trillion-dollar infrastructure pipelines, entirely new cities being built from scratch, a healthcare system being reimagined, and an energy sector under pressure to modernize — all of it is generating a single, urgent question for every industry professional operating in the Kingdom:</p>
+      <p>How do you plan, build, and manage at this scale without making costly mistakes?</p>
+      <p>The answer, increasingly, is digital twins.</p>
+      <h2>The Scale of What Is Being Built Demands a New Approach</h2>
+      <p>Saudi Arabia is not incrementally upgrading its infrastructure. It is building new cities, new industrial zones, new transport corridors, and new energy grids — simultaneously, at speed, and under intense scrutiny. The total value of real estate and infrastructure projects launched across the Kingdom has exceeded USD 1.25 trillion.</p>
+      <p>At that scale, traditional project management, manual monitoring, and reactive maintenance simply cannot keep up. The complexity is too great, the margin for error too costly, and the timelines too tight.</p>
+      <p>This is precisely where digital twin technology steps in. By creating a live virtual replica of any physical asset, process, or system, digital twins allow stakeholders to simulate decisions before committing to them, monitor performance in real time, and anticipate problems before they become failures. For a country building at this pace and ambition, this is not a luxury — it is a necessity.</p>
+      <h2>Every Major Sector Is Feeling the Pressure</h2>
+      <h3>Energy and Industrial Operations</h3>
+      <p>The Kingdom's energy sector is under dual pressure: maintain world-class output from existing infrastructure while simultaneously transitioning toward renewables and diversified industrial production. Both demands require smarter, more responsive operations.</p>
+      <p>Digital twins address this directly. They enable operators to run real-time simulations of complex facilities, forecast equipment behavior, schedule maintenance before failures occur, and optimize production processes continuously. The result is reduced downtime, lower operational costs, and safer working environments — outcomes that matter enormously in an industry where the margins of error are measured in millions of dollars per hour.</p>
+      <p>The demand from this sector alone is driving significant investment in digital twin capability across the Kingdom.</p>
+      <h3>Construction and Urban Development</h3>
+      <p>With hundreds of large-scale projects running concurrently across the country, the construction sector faces an enormous coordination and delivery challenge. Delays and cost overruns are not just financial problems — at this scale of delivery, they carry significant strategic and economic weight.</p>
+      <p>Digital twins offer project owners and contractors a way to get ahead of those risks. Virtual models of entire project sites allow teams to identify clashes, optimize logistics, track progress against plan, and make design decisions with full visibility of their downstream impact — before a single brick is laid or a single riyal is committed.</p>
+      <p>The integration of digital twins with Building Information Modeling is also transforming how large, multi-stakeholder projects are coordinated, replacing disconnected workflows with a single source of live truth that every team works from.</p>
+      <h3>Smart City Planning and Management</h3>
+      <p>Saudi Arabia's urban development ambitions are unlike anything attempted elsewhere. Entire cities are being designed from the ground up, with the expectation that they will be intelligent, sustainable, and efficient from day one.</p>
+      <p>You cannot design and manage a smart city with spreadsheets and site visits. Urban digital twins make it possible to model entire city ecosystems — traffic flow, energy consumption, water systems, public services — and optimize them continuously as the city evolves. They also allow planners to stress-test scenarios: What happens to energy demand if the population doubles? How does a new transit line affect congestion patterns? What is the fastest evacuation route in an emergency?</p>
+      <p>The need for this kind of decision intelligence across Saudi Arabia's urban pipeline is substantial and growing.</p>
+      <h3>Healthcare</h3>
+      <p>Saudi Arabia's healthcare sector is expanding rapidly to serve a growing, increasingly urbanized population with rising expectations. At the same time, there is a strong push toward a preventive, personalized model of care — a shift that demands far more granular data and analytical capability than conventional systems provide.</p>
+      <p>Digital twins are emerging as a key enabler of this transition. Personal health digital twins — built on genomic data, wearables, clinical records, and behavioral inputs — can model an individual's health trajectory, flag risks early, and support personalized treatment decisions. At the facility level, hospital digital twins can optimize patient flow, resource allocation, and infrastructure utilization in real time.</p>
+      <p>The demand for this capability, from both public health authorities and private healthcare providers, is only going to intensify.</p>
+      <h2>The Market Is Already Moving — Fast</h2>
+      <p>The Saudi digital twin market is one of the fastest-growing technology segments in the region. It is already valued in the hundreds of millions of dollars and is projected to grow at a compound annual growth rate that outpaces most comparable markets globally over the next decade.</p>
+      <p>Significant investment is flowing into the sector. Global technology partnerships are being formed. Frameworks around smart infrastructure and digital transformation are being put in place. The ecosystem is being built — and the organizations that position themselves within it now will be far better placed than those who wait.</p>
+      <h2>The Time for Digital Twins Is Here</h2>
+      <p>The demand for digital twin expertise, implementation capability, and solutions is not a future projection. It is present and accelerating. Saudi Arabia has created a rare alignment of capital, ambition, and a genuine operational need for advanced technology — all converging at the same moment.</p>
+      <p>For businesses in construction, energy, technology, consulting, manufacturing, or healthcare, the question is not whether digital twins will be central to Saudi Arabia's next decade. They already are. The question is whether your organization will be part of delivering that future — or watching from the outside as others do.</p>
+      <p>The Kingdom is building something extraordinary. Digital twins are how it will be done intelligently.</p>
+    </div>
+  </div>
+</article>
+</main>
+
+<footer id="footer">
+  <div class="ft-top">
+    <h2 class="ft-headline">The clearest way to understand how we work is to put a real problem in front of us.</h2>
+    <div class="ft-cta">
+      <a class="ft-btn" href="/contact">Start a conversation <span class="arw" aria-hidden="true">&rarr;</span></a>
+    </div>
+  </div>
+  <hr class="ft-rule">
+  <div class="ft-cols">
+    <div class="ft-col">
+      <span class="ft-label">Oxigen</span>
+      <p class="ft-brand">Applied intelligence for the next decade.</p>
+      <p class="ft-note">A small firm, by intention.</p>
+    </div>
+    <div class="ft-col">
+      <span class="ft-label">Navigate</span>
+      <a href="/#approach" data-scroll="approach">Approach</a>
+      <a href="/#services" data-scroll="services">Capability</a>
+      <a href="/#startups" data-scroll="startups">Products</a>
+      <a href="/#research" data-scroll="research">Articles</a>
+    </div>
+    <div class="ft-col">
+      <span class="ft-label">Contact</span>
+      <a href="mailto:info@oxigen.sa">info@oxigen.sa</a>
+      <!-- <a href="#">LinkedIn</a> -->
+      <span class="ft-muted">Riyadh &middot; across the Gulf</span>
+    </div>
+  </div>
+  <div class="ft-brandmark">
+    <div class="ft-word" role="img" aria-label="Oxigen"><canvas id="ft-vox" class="ft-vox" aria-hidden="true"></canvas><svg class="ft-wordmark" viewBox="139.0 326.0 1641.0 427.0" role="img" aria-label="Oxigen" xmlns="http://www.w3.org/2000/svg"><path d="M151.67,490.31c0-82.44,67.76-151.9,151.33-151.9s151.33,69.46,151.33,151.9-68.33,151.9-151.33,151.9-151.33-69.46-151.33-151.9ZM365.11,490.31c0-41.22-27.11-71.15-62.11-71.15s-62.11,29.93-62.11,71.15,26.54,71.15,62.11,71.15,62.11-29.93,62.11-71.15Z" fill="currentColor"/><path d="M524.32,486.92l-65.28-140.6h97.69l34.39,82.44,60.48-82.44h94.87l-109.77,140.6,70.42,147.38h-99.38l-38.01-88.09-65.89,88.09h-96.56l117.06-147.38Z" fill="currentColor"/><path d="M758.33,346.32h89.22l-45.57,287.98h-89.22l45.57-287.98Z" fill="currentColor"/><path d="M862.59,646.72l91.48-4.52c4.52,10.73,19.76,23.72,46.87,23.72,32.75,0,53.64-19.2,53.64-51.95v-22.59h-2.82c-8.47,10.16-31.62,29.36-70.02,29.36-71.15,0-131.57-62.11-131.57-141.73s60.42-140.6,129.88-140.6c41.22,0,68.89,20.89,81.88,36.14h2.82l13.55-28.23h65.5v263.14c0,79.62-54.21,132.13-142.3,132.13-105.03,0-134.39-72.84-138.91-94.86ZM1054.58,480.15c0-38.4-26.54-65.5-57.6-65.5s-57.6,27.11-57.6,65.5,25.98,65.5,57.6,65.5,57.6-27.67,57.6-65.5Z" fill="currentColor"/><path d="M1169.21,490.31c0-82.44,67.76-151.9,150.2-151.9s145.69,65.5,145.69,146.82c0,15.81-1.69,27.1-3.39,32.75h-205.54c9.03,32.19,32.19,49.13,62.68,49.13,28.24,0,43.48-14.68,48.56-20.33l89.22,3.95c-15.25,40.66-63.24,91.48-136.65,91.48-84.14,0-150.77-68.33-150.77-151.9ZM1380.4,462.64c-6.78-28.8-30.49-50.25-62.11-50.25-29.93,0-54.21,18.63-62.68,50.25h124.79Z" fill="currentColor"/><path d="M1490.51,346.32h66.07l12.99,28.23h2.82c7.91-10.16,36.7-36.14,80.75-36.14,68.33,0,115.19,49.13,115.19,124.23v171.66h-89.22v-160.37c0-29.93-20.89-53.08-49.69-53.08s-49.69,23.15-49.69,53.08v160.37h-89.22v-287.98Z" fill="currentColor"/></svg></div>
+    <hr class="ft-rule2">
+    <div class="ft-legal">
+      <span class="ft-copy">&copy; 2026 Oxigen. All rights reserved.</span><span class="ft-dot" aria-hidden="true">&nbsp;&middot;&nbsp;</span><span class="ft-made">Made by <a href="https://saltnhue.com" target="_blank" rel="noopener">Salt&amp;hue</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const navbarEl = document.querySelector('.navbar');
+  const hero = document.querySelector('.article-hero');
+  const footer = document.getElementById('footer');
+  const bar = document.getElementById('readbar');
+  function onScroll() {
+    if (hero) navbarEl.classList.toggle('on-light', hero.getBoundingClientRect().bottom < 72);
+    if (footer) {
+      const navH = navbarEl.offsetHeight, ftTop = footer.getBoundingClientRect().top;
+      navbarEl.style.transform = ftTop < navH ? 'translateY(' + (ftTop - navH) + 'px)' : '';
+    }
+    if (bar) {
+      const el = document.documentElement, max = el.scrollHeight - el.clientHeight;
+      bar.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
+    }
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  onScroll();
+})();
+</script>
+<script>
+/* footer "oxigen" wordmark — flat 2D grid of squares (light: no WebGL / no second GL context);
+   particles disperse like air near the cursor. Same sampling + motion as before, drawn with fillRect. */
+(function () {
+  const cv = document.getElementById('ft-vox');
+  const svgEl = document.querySelector('.ft-wordmark');
+  const footer = document.getElementById('footer');
+  if (!cv || !svgEl || !footer || !cv.getContext) return;
+  const ctx = cv.getContext('2d');
+  const GW = 224, GH = 58;
+  let cells = [], W = 0, H = 0, cell = 1, originX = 0, originY = 0;
+
+  // sample the wordmark SVG into a GW x GH grid of filled cells
+  const img = new Image();
+  img.onload = () => {
+    const off = document.createElement('canvas'); off.width = GW; off.height = GH;
+    const o = off.getContext('2d'); o.drawImage(img, 0, 0, GW, GH);
+    const d = o.getImageData(0, 0, GW, GH).data;
+    cells = [];
+    for (let y = 0; y < GH; y++) for (let x = 0; x < GW; x++) {
+      if (d[(y * GW + x) * 4 + 3] > 110) cells.push({ x: x, y: y, dx: 0, dy: 0, seed: Math.random() });
+    }
+    resize(); loop();
+  };
+  img.src = 'data:image/svg+xml,' + encodeURIComponent(new XMLSerializer().serializeToString(svgEl));
+
+  let tmx = -9999, tmy = -9999, mx = -9999, my = -9999;            // cursor target + eased, in backing-store px
+  addEventListener('pointermove', (e) => {
+    const r = cv.getBoundingClientRect(); if (!r.width) return;
+    tmx = (e.clientX - r.left) * (W / r.width);
+    tmy = (e.clientY - r.top) * (H / r.height);
+  });
+
+  function resize() {
+    const par = cv.parentNode, lw = par.clientWidth, lh = par.clientHeight;   // .ft-word reserves the logo's ORIGINAL box
+    const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h || !lw) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = Math.round(w * dpr); H = Math.round(h * dpr);
+    cv.width = W; cv.height = H;
+    cell = Math.min(lw * dpr / GW, lh * dpr / GH);                 // logo at its original size; the canvas is just larger around it
+    originX = (W - GW * cell) / 2; originY = (H - GH * cell) / 2;   // centred on both axes
+  }
+  addEventListener('resize', resize);
+
+  let vis = false;
+  new IntersectionObserver((es) => { vis = es[0].isIntersecting; if (vis) resize(); }, { rootMargin: '160px' }).observe(footer);
+
+  const t0 = performance.now();
+  function loop() {
+    requestAnimationFrame(loop);
+    if (!vis || !cells.length || !W) return;
+    const t = (performance.now() - t0) / 1000;
+    if (mx < -9000) { mx = tmx; my = tmy; } else { mx += (tmx - mx) * 0.1; my += (tmy - my) * 0.1; }
+    const LW = GW * cell;                                         // dispersal is sized to the LOGO, not the larger canvas, so the effect is unchanged
+    const R = LW * 0.30;                                           // dispersal reach around the cursor
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#ffffff';
+    const base = cell * 0.84;                                      // square size (leaves the voxel gap)
+    for (let i = 0; i < cells.length; i++) {
+      const c = cells[i];
+      const bx = originX + c.x * cell + cell * 0.5, by = originY + c.y * cell + cell * 0.5;   // cell centre
+      const vx = bx - mx, vy = by - my, d = Math.hypot(vx, vy) || 0.0001;
+      const env = Math.max(0, 1 - d / R), ev = env * env;          // cursor influence
+      const p = c.seed * 6.283;
+      const fl = ev * LW * 0.018;                                  // turbulent drift near the cursor
+      const driftX = fl * Math.sin(t * 0.9 + (c.x / GW) * 28 + p) + fl * 0.5 * Math.sin(t * 1.9 + p * 1.7);
+      const driftY = fl * Math.cos(t * 0.8 + (c.y / GH) * 6.4 + p) + fl * 0.5 * Math.cos(t * 1.7 + p * 1.3);
+      const push = ev * LW * 0.045;                                // blown away from the cursor (tuned to stay within the canvas margin)
+      let tx = (vx / d) * push + driftX;
+      let ty = (vy / d) * push + driftY - ev * LW * 0.016;         // lifted, like air rising
+      c.dx += (tx - c.dx) * 0.07; c.dy += (ty - c.dy) * 0.07;      // slow, floaty easing -- air, not water
+      const s = base * (1 - ev * 0.5);                             // thin out as they disperse into air
+      ctx.fillRect(bx + c.dx - s * 0.5, by + c.dy - s * 0.5, s, s);
+    }
+  }
+})();
+</script>
+<div id="px-tx" aria-hidden="true"><div class="px-panel px-p1"></div><div class="px-panel px-p2"></div></div>
+<script>
+/* sliding page transition: layered panels sweep up to cover, then up-and-off to reveal */
+(function(){
+  var tx=document.getElementById('px-tx'); if(!tx) return;
+  var p1=tx.querySelector('.px-p1'), p2=tx.querySelector('.px-p2');
+  var EASE='cubic-bezier(.76,0,.24,1)';
+  function slide(el,from,to,dur,delay){
+    return el.animate([{transform:'translateY('+from+')'},{transform:'translateY('+to+')'}],
+      {duration:dur,delay:delay||0,easing:EASE,fill:'forwards'});
+  }
+  function exit(done){
+    tx.style.display='block';
+    slide(p1,'100%','0%',520,0);
+    var a=slide(p2,'100%','0%',520,90);
+    var go=function(){ if(done){var d=done; done=null; d();} };
+    if(a.finished&&a.finished.then) a.finished.then(go).catch(go);
+    setTimeout(go,820);
+  }
+  function enter(){
+    tx.style.display='block';
+    p1.style.transform='translateY(0%)'; p2.style.transform='translateY(0%)';
+    document.documentElement.classList.remove('px-cover');
+    requestAnimationFrame(function(){
+      slide(p2,'0%','-100%',560,0);
+      var a=slide(p1,'0%','-100%',560,90);
+      var fin=function(){ tx.style.display='none'; };
+      if(a.finished&&a.finished.then) a.finished.then(fin).catch(fin);
+      setTimeout(fin,920);
+    });
+  }
+  if(document.documentElement.classList.contains('px-cover')) requestAnimationFrame(enter);
+  sessionStorage.removeItem('pxnav');
+  addEventListener('pageshow', function(ev){ if(!ev.persisted) return;   /* Back/Forward (bfcache): clear any leftover transition cover so we don't land on a stuck screen */
+    try{ p1.getAnimations().forEach(function(a){a.cancel();}); p2.getAnimations().forEach(function(a){a.cancel();}); }catch(_){}
+    p1.style.transform='translateY(100%)'; p2.style.transform='translateY(100%)'; tx.style.display='none';
+    document.documentElement.classList.remove('px-cover'); });
+  addEventListener('click', function(e){
+    var a=e.target.closest&&e.target.closest('a'); if(!a) return;
+    var href=a.getAttribute('href');
+    if(!href||href.charAt(0)==='#'||a.target==='_blank'||e.metaKey||e.ctrlKey||e.shiftKey||e.button!==0) return;
+    var url; try{url=new URL(a.href,location.href);}catch(_){return;}
+    var _s=url.pathname.split('/').pop();var _pg=(_s===''||_s.indexOf('.')<0||/\.html?$/i.test(_s));if(url.origin!==location.origin||!_pg||url.pathname===location.pathname) return;
+    e.preventDefault(); sessionStorage.setItem('pxnav','1'); exit(function(){location.href=a.href;});
+  });
+})();
+</script>
+<!-- Awwwards Honors badge -->
+<style>
+  #awwwards { position: fixed; z-index: 999; top: 50%; left: 0; transform: translateY(-50%); line-height: 0; }
+  #awwwards a { display: block; }
+  @media (max-width: 1080px) { #awwwards { display: none; } }
+</style>
+<div id="awwwards"><a href="https://www.awwwards.com/sites/oxigen" target="_blank"><svg width="53.08" height="171.358"><path class="js-color-bg" fill="white" d="M0 0h53.08v171.358H0z"></path><g class="js-color-text" fill="black"><path d="M20.047 153.665v-1.9h3.888v-4.093h-3.888v-1.9h10.231v1.9h-4.59v4.093h4.59v1.9zM29.898 142.236c-.331.565-.784.997-1.359 1.294s-1.222.446-1.944.446c-.721 0-1.369-.149-1.943-.446a3.316 3.316 0 0 1-1.36-1.294c-.331-.564-.497-1.232-.497-2.002s.166-1.438.497-2.002a3.316 3.316 0 0 1 1.36-1.294c.574-.297 1.223-.445 1.943-.445.723 0 1.369.148 1.944.445a3.307 3.307 0 0 1 1.359 1.294c.331.564.497 1.232.497 2.002s-.166 1.438-.497 2.002m-1.703-3.347c-.435-.33-.967-.496-1.601-.496-.633 0-1.166.166-1.601.496-.433.332-.649.78-.649 1.346 0 .564.217 1.013.649 1.345.435.331.968.497 1.601.497.634 0 1.166-.166 1.601-.497.435-.332.649-.78.649-1.345.001-.566-.214-1.014-.649-1.346M22.911 134.852v-1.813h1.186a3.335 3.335 0 0 1-.951-1.009 2.423 2.423 0 0 1-.352-1.271c0-.682.19-1.229.57-1.645.381-.413.932-.621 1.652-.621h5.262v1.812h-4.721c-.419 0-.727.096-.921.285-.195.19-.292.447-.292.769 0 .302.115.58.35.833.234.254.577.458 1.03.613.454.156.993.234 1.616.234h2.938v1.813h-7.367zM29.898 125.136a3.314 3.314 0 0 1-1.359 1.294c-.575.297-1.222.445-1.944.445-.721 0-1.369-.148-1.943-.445a3.322 3.322 0 0 1-1.36-1.294c-.331-.565-.497-1.232-.497-2.002 0-.771.166-1.438.497-2.003a3.313 3.313 0 0 1 1.36-1.293c.574-.297 1.223-.446 1.943-.446.723 0 1.369.149 1.944.446s1.028.728 1.359 1.293.497 1.232.497 2.003c.001.769-.166 1.436-.497 2.002m-1.703-3.347c-.435-.331-.967-.497-1.601-.497-.633 0-1.166.166-1.601.497-.433.331-.649.778-.649 1.345 0 .564.217 1.013.649 1.344.435.332.968.498 1.601.498.634 0 1.166-.166 1.601-.498.435-.331.649-.779.649-1.344.001-.567-.214-1.014-.649-1.345M22.911 117.75v-1.812h1.199c-.419-.265-.742-.586-.972-.966s-.345-.784-.345-1.213c0-.272.05-.569.146-.892l1.682.336a1.429 1.429 0 0 0-.205.76c0 .576.261 1.048.783 1.418.521.37 1.342.557 2.461.557h2.617v1.812h-7.366zM29.812 111.252c-.391.511-.857.851-1.403 1.016l-.776-1.446c.381-.138.68-.329.893-.577.215-.249.321-.544.321-.885a1.2 1.2 0 0 0-.168-.658c-.112-.175-.294-.263-.548-.263-.225 0-.406.105-.548.313-.142.21-.291.534-.446.973-.019.068-.058.17-.117.307-.224.565-.506 1.004-.848 1.315-.34.313-.779.467-1.314.467-.381 0-.727-.102-1.039-.306a2.185 2.185 0 0 1-.744-.84 2.554 2.554 0 0 1-.279-1.207c0-.497.105-.949.314-1.359.211-.408.506-.725.886-.949l.993 1.082c-.43.292-.644.686-.644 1.184a.84.84 0 0 0 .154.504.471.471 0 0 0 .401.212c.176 0 .338-.103.49-.307.15-.205.334-.604.547-1.199.205-.564.474-1.001.805-1.308.332-.308.756-.46 1.271-.46.721 0 1.299.229 1.732.687s.65 1.057.65 1.797c.001.759-.194 1.396-.583 1.907M35.481 17.006l-4.782 14.969h-3.266l-2.584-9.682-2.584 9.682h-3.268l-4.782-14.969h3.713l2.673 10.276 2.525-10.276h3.445l2.524 10.276 2.674-10.276zM37.978 27.163c1.426 0 2.496 1.068 2.496 2.495 0 1.425-1.07 2.495-2.496 2.495-1.425 0-2.494-1.07-2.494-2.495-.001-1.427 1.069-2.495 2.494-2.495"></path></g></svg></a></div>
+</body>
+</html>

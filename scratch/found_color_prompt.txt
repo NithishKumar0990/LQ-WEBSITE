@@ -1,0 +1,104 @@
+<USER_REQUEST>
+TOKEN-EFFICIENT MODE — follow strictly:
+
+1. Reply with only the requested output. No preamble, no recap, no “sure”, no extra explanation unless I explicitly ask.
+2. Prefer the smallest change: unified diff / search-replace / exact snippet. Never rewrite a whole file unless I ask.
+3. Do not restate my prompt, dump unchanged code, or repeat large context.
+4. Do not add comments, docs, tests, refactors, or extra features unless I ask.
+5. If something is ambiguous, assume the simplest reasonable interpretation and proceed. Ask at most one short question only if blocked.
+6. If you need files/context, name only the minimal paths/symbols. Do not request the whole repo.
+7. Keep reasoning internal. Output the answer/code only.
+8. Match existing style. Change only what is required.----------------------------------------------------------------------------------------------------------------IMPORTANT UPDATE: Remove the ENTIRE old blue/gold color palette 
+from the website and apply this NEW brand palette everywhere. 
+Content, layout, structure — DO NOT touch. ONLY colors change.
+
+═══════════════════════════════════
+1. NEW COLOR PALETTE (REPLACE ALL OLD COLORS)
+═══════════════════════════════════
+CORE BRAND COLORS:
+- Dark Brown (PRIMARY): #5A3A1E → nav, header, banners, primary 
+  buttons, icons, section headings accents
+- Darker Brown: #3E2712 → footer bg, dark sections, brown hover 
+  state
+- Lighter Brown: #7B5533 → gradient ends, secondary accents
+- Golden Yellow (ACCENT): #F4C542 → CTA buttons, highlights, 
+  icons, underlines, active nav states
+- Light Yellow (HIGHLIGHT): #FFD966 → hover accents, badge 
+  highlights, subtle emphasis
+- Black: #000000 → all headings text
+- White: #FFFFFF → main page background
+
+SUPPORTING NEUTRALS (warm tones, matching brown theme):
+- Body text: #4A4034 (warm gray-brown)
+- Soft section bg (alternating sections): #FAF6F0
+- Card borders / dividers: #EFE7DB
+- Light warm surface: #F5EFE6
+- Muted text (captions, meta): #8A7B6C
+
+KEEP UNCHANGED:
+- WhatsApp green #25D366 (WhatsApp brand color — do not change)
+- Form error red and success green (functional colors)
+
+═══════════════════════════════════
+2. OLD → NEW COLOR REPLACEMENT MAP (apply globally)
+═══════════════════════════════════
+#1e008d → #5A3A1E
+#182266 → #3E2712
+#031eb6 → #7B5533
+#ffd200 → #F4C542
+#222222 → #000000
+#54595f → #4A4034
+#f7f7f7 → #FAF6F0
+#ebebeb → #EFE7DB
+Gradient (#1e008d → #031eb6) → (#3E2712 → #5A3A1E)
+
+Search the ENTIRE codebase (all components, pages, data files, 
+tailwind.config) for old hex values and replace per this map. 
+Also update tailwind.config custom colors to the new palette.
+
+═══════════════════════════════════
+3. APPLY CONSISTENTLY IN THESE PLACES
+═══════════════════════════════════
+- Header: top bar = #3E2712, main header = #FFFFFF bg with 
+  #000000 text, nav hover = #F4C542 underline, dropdown bg white
+- Hero sections: gradient #3E2712 → #5A3A1E with white text, 
+  gold #F4C542 CTA buttons (hover → #FFD966)
+- Buttons: primary = #5A3A1E bg white text; accent = #F4C542 bg 
+  #000000 text; hover states defined for both
+- Cards: white bg, border #EFE7DB, icon accents #F4C542, hover 
+  shadow + gold border
+- Footer: bg #3E2712, headings #FFD966, text #F5EFE6, links 
+  hover #F4C542
+- Section headings: black text with #F4C542 underline/accent bar
+- Alternating sections: white and #FAF6F0
+- Counters: numbers in #F4C542 on #3E2712 bg strip
+- Forms: focus border #5A3A1E, submit button #5A3A1E (hover 
+  darker), labels #000000
+- WhatsApp widget: unchanged (#25D366)
+
+═══════════════════════════════════
+4. VERIFY AFTER APPLYING
+═══════════════════════════════════
+- [ ] ZERO old blue/gold hex values remain (search and confirm)
+- [ ] Text readable: black text on white/yellow, white text on 
+      brown — check contrast everywhere
+- [ ] Hover states work on buttons, links, cards, nav
+- [ ] Gradient heroes look rich (brown not washed out)
+- [ ] `npm run build` passes
+- [ ] No layout/content changes — colors ONLY
+
+Update README.md with the new color palette table.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-07T00:37:32+05:30.
+
+The user's current state is as follows:
+Active Document: x:\Rag_Chatbot_Pro\verification\verify_10_criteria.py (LANGUAGE_PYTHON)
+Cursor is on line: 18
+Other open documents:
+- x:\Rag_Chatbot_Pro\verification\verify_10_criteria.py (LANGUAGE_PYTHON)
+- x:\Rag_Chatbot_Pro\static\app.js (LANGUAGE_JAVASCRIPT)
+- x:\Rag_Chatbot_Pro\verification\verify_phase_a2.py (LANGUAGE_PYTHON)
+Running terminal commands:
+- npm run dev (in x:\Lean Website, running for 27m31s)
+</ADDITIONAL_METADATA>

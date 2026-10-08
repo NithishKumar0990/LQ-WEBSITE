@@ -1,0 +1,128 @@
+<USER_REQUEST>
+ Idha Save Pannu: COLOR-SYSTEM.md (Project Root la)
+md
+
+> Never invent hex values. Never hardcode random colors inside components.
+- white body text on any dark brown
+- maroon-700 text on white (emphasis text)
+
+❌ NEVER:
+- white text on pollen-400 (yellow bg)
+- pollen/yellow text on white bg
+- black text on earth-600/700/800/900 (dark brown bg)
+- maroon text on earth backgrounds (muddy)
+- blue, purple, cyan anywhere in UI
+
+---
+
+## 5. GRADIENT RECIPES (only these)
+
+```
+hero-dark:      linear-gradient(135deg, earth-900, earth-600)
+hero-luxury:    linear-gradient(135deg, maroon-900, earth-900)
+gold-button:    linear-gradient(180deg, pollen-300, pollen-400)
+gold-text:      linear-gradient(90deg, pollen-300, bronze-500)
+spotlight-glow: radial-gradient(pollen-400 at 12% opacity, earth-900)
+underline-bar:  linear-gradient(90deg, pollen-400, bronze-500)
+```
+
+---
+
+## 6. MIGRATION MAP (old palette → new palette)
+
+| Old (remove) | New (use) |
+|---|---|
+| #5A3A1E | earth-600 `#986B14` |
+| #3E2712 | earth-900 `#3E2A08` |
+| #7B5533 | earth-500 `#B1831F` |
+| #F4C542 | pollen-400 `#FFC91B` |
+| #FFD966 | pollen-200 `#FFE684` (light highlight) / pollen-300 `#FFDC4F` (text on dark) |
+| #FAF6F0 | neutral-50 `#FAF8F5` |
+| #EFE7DB | neutral-200 `#E2DACC` |
+| #4A4034 | neutral-600 `#5A4D3D` |
+| #8A7B6C | neutral-500 `#7C6B55` |
+
+Old values must NOT exist anywhere in the codebase after migration.
+
+---
+
+## 7. USAGE PHILOSOPHY
+
+- **earth-600** = workhorse (nav, banners, primary buttons) — max ~30% of any viewport
+- **pollen-400** = attention only (CTA, counters, active nav) — never large bg areas
+- **maroon** = luxury depth (footer, dark strips, hovers) — never body-area bg on light pages
+- **bronze** = richness detail (icons, badges, gradient partner)
+- **White space** dominates — colors frame content, never flood it
+- Yellow text rule: on dark bg use pollen-300; highlights/underlines use pollen-400/bronze
+
+---
+
+## 8. TAILWIND CONFIG (apply exactly)
+
+```js
+// tailwind.config.js
+colors: {
+  brand: {
+    earth:  { 50:'#FCF6E7',100:'#F7E8C4',200:'#EFD28D',300:'#E5BA55',400:'#CD9E30',500:'#B1831F',600:'#986B14',700:'#795410',800:'#5A3F0C',900:'#3E2A08',950:'#2A1C05' },
+    maroon: { 50:'#FDECEA',100:'#FBD2CF',200:'#F6A29D',300:'#EF6F68',400:'#E23A31',500:'#C11A10',600:'#9C0C05',700:'#7F0400',800:'#5D0300',900:'#3F0200',950:'#2B0100' },
+    bronze: { 50:'#FDF8E6',100:'#FAEFC2',200:'#F4DF89',300:'#ECCF50',400:'#DFBA2E',500:'#CA9D17',600:'#A57D10',700:'#7C5D0C',800:'#523E08',900:'#2B1F04',950:'#1D1502' },
+    pollen: { 50:'#FFF9E1',100:'#FFF0B6',200:'#FFE684',300:'#FFDC4F',400:'#FFC91B',500:'#EBB70D',600:'#C09108',700:'#8F6C06',800:'#5F4804',900:'#302502',950:'#221A01' },
+    neutral:{ 50:'#FAF8F5',100:'#F1EDE6',200:'#E2DACC',300:'#CDBFA9',400:'#A6957C',500:'#7C6B55',600:'#5A4D3D',700:'#42382C',800:'#2C251D',900:'#191410',950:'#0F0C0A' },
+  }
+}
+```
+
+Components must use classes like `bg-brand-earth-600`, `text-brand-pollen-300` — never raw hex.
+
+---
+
+## 9. FINAL COLOR CHECKLIST (every UI task)
+
+- [ ] Only colors from this file used (grep for stray hex)
+- [ ] Old palette fully removed
+- [ ] Contrast rules (Section 4) respected
+- [ ] WhatsApp green untouched
+- [ ] Dark bg → pollen-300 headings, white body text
+- [ ] Light bg → black headings, neutral-600 body
+
+
+COLOR-SYSTEM.md has been added to the project root. It is now the 
+SINGLE SOURCE OF TRUTH for all colors.
+
+Tasks:
+1. Read COLOR-SYSTEM.md fully
+2. Update tailwind.config.js with the exact brand color config 
+   from Section 8
+3. Migrate the ENTIRE codebase from the old palette to the new 
+   palette using the migration map in Section 6 (replace all old 
+   hex values with correct brand tokens)
+4. Apply the contrast rules from Section 4 everywhere (especially: 
+   yellow pollen-300 headings on dark brown, black text on light)
+5. Replace all gradients with the recipes in Section 5
+6. Add to AGENTS.md: "Always read COLOR-SYSTEM.md before any UI 
+   task. Use only brand-* tokens — never raw hex values."
+7. Verify: grep for old hex values (#5A3A1E, #3E2712, #7B5533, 
+   #F4C542, #FFD966) — must return ZERO results
+8. `npm run build` must pass
+
+Do NOT change layout, content, or structure — colors only.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-08T15:58:16+05:30.
+
+The user's current state is as follows:
+Active Document: x:\Lean Website\vite.config.js (LANGUAGE_JAVASCRIPT)
+Cursor is on line: 7
+Other open documents:
+- x:\Lean Website\Reference-Website-1.md (LANGUAGE_MARKDOWN)
+- x:\Lean Website\.agents\mcp_config.json (LANGUAGE_JSON)
+- c:\Users\nithi\.gemini\config\mcp_config.json (LANGUAGE_JSON)
+- x:\Lean Website\src\components\SectionHeading.jsx (LANGUAGE_JAVASCRIPT)
+- x:\Lean Website\vite.config.js (LANGUAGE_JAVASCRIPT)
+Browser State:
+  Page B12E1104701BCD62CA4E994CF578FA53 (LIVEUP inc. — 世界観のデザイン、認知のエンジニアリング) - https://live-up.co.jp/ [ACTIVE]
+    Viewport: 1427x788, Page Height: 10212
+Running terminal commands:
+- npm run dev (in x:\Lean Website, running for 3h56m29s)
+- .\.venv\Scripts\python.exe -m uvicorn server:app --port 8000 --reload (in x:\Rag_Chatbot_Pro, running for 3h26m12s)
+</ADDITIONAL_METADATA>

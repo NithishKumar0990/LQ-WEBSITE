@@ -8,7 +8,7 @@
 
   body {
     font-family: 'Roboto', sans-serif;
-    color: #4A4034;
+    color: #5A4D3D;
     background-color: #FFFFFF;
   }
 
@@ -20,8 +20,10 @@
   .bg-navy h1, .bg-navy h2, .bg-navy h3, .bg-navy h4, .bg-navy h5, .bg-navy h6,
   [class*="from-navy"] h1, [class*="from-navy"] h2, [class*="from-navy"] h3, [class*="from-navy"] h4, [class*="from-navy"] h5, [class*="from-navy"] h6,
   [class*="from-primary"] h1, [class*="from-primary"] h2, [class*="from-primary"] h3, [class*="from-primary"] h4, [class*="from-primary"] h5, [class*="from-primary"] h6,
-  [class*="bg-primary"] h1, [class*="bg-primary"] h2, [class*="bg-primary"] h3, [class*="bg-primary"] h4, [class*="bg-primary"] h5, [class*="bg-primary"] h6 {
-    color: #FFD966;
+  [class*="bg-primary"] h1, [class*="bg-primary"] h2, [class*="bg-primary"] h3, [class*="bg-primary"] h4, [class*="bg-primary"] h5, [class*="bg-primary"] h6,
+  [class*="bg-brand-earth"] h1, [class*="bg-brand-earth"] h2, [class*="bg-brand-earth"] h3, [class*="bg-brand-earth"] h4, [class*="bg-brand-earth"] h5, [class*="bg-brand-earth"] h6,
+  [class*="from-brand-earth"] h1, [class*="from-brand-earth"] h2, [class*="from-brand-earth"] h3, [class*="from-brand-earth"] h4, [class*="from-brand-earth"] h5, [class*="from-brand-earth"] h6 {
+    color: #FFDC4F;
   }
 }
 

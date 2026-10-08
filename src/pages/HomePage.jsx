@@ -195,8 +195,8 @@ export default function HomePage() {
 
       <main className="min-h-screen">
         {/* ---------- SECTION: Hero ---------- */}
-        <section className="relative bg-gradient-to-br from-navy via-[#4D3017] to-primary text-white py-24 lg:py-32 overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#F4C542_1px,transparent_1px)] [background-size:20px_20px]" />
+        <section className="relative bg-gradient-to-br from-brand-earth-900 to-brand-earth-600 text-white py-24 lg:py-32 overflow-hidden">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#FFC91B_1px,transparent_1px)] [background-size:20px_20px]" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="max-w-3xl">
@@ -492,7 +492,7 @@ export default function HomePage() {
 
         {/* ---------- SECTION: Counters ---------- */}
         <section className="py-20 bg-navy text-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#F4C542_1px,transparent_1px)] [background-size:16px_16px]" />
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#FFC91B_1px,transparent_1px)] [background-size:16px_16px]" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-2xl mx-auto mb-14">
