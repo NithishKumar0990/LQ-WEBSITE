@@ -1,14 +1,14 @@
 // ═══════════════════════════════════════
-// PAGE: Services (/services) — Services Overview
-// SECTIONS: Banner, Intro & Services Grid, Consultation Banner
+// PAGE: Services (/services) — Services Overview (Phase 1 DAQ Adapted)
+// SECTIONS: Banner (P01+P07), Services Grid (P08 Tiles × 10), Consultation Banner
 // ═══════════════════════════════════════
 
 import React from "react";
-import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import SectionHeading from "../components/SectionHeading";
 import PageBanner from "../components/PageBanner";
 import CTABanner from "../components/CTABanner";
+import CapabilityTile from "../components/daq/CapabilityTile";
 import { servicesData } from "../data/services";
 import {
   Code,
@@ -21,7 +21,6 @@ import {
   Cpu,
   Layers,
   ShoppingBag,
-  ArrowRight,
 } from "lucide-react";
 
 const iconMap = {
@@ -45,63 +44,53 @@ export default function ServicesPage() {
         description="Explore enterprise software engineering, cloud architectures, AI/ML development, DevOps, and mobile app solutions by Leanquality Solutions Pune."
       />
 
-      <main className="min-h-screen bg-lightBg">
-        {/* ---------- SECTION: Banner ---------- */}
+      <main className="min-h-screen bg-mono-50">
+        {/* ---------- SECTION: Banner (P01 + P07) ---------- */}
         <PageBanner
           badge="Enterprise Solutions"
           title="Our Core Services"
           subtitle="We empower modern enterprises with comprehensive software engineering, cloud architecture, and intelligent automation solutions."
         />
 
-        {/* ---------- SECTION: Services Grid ---------- */}
+        {/* ---------- SECTION: Services Grid (P08 Capability Tiles) ---------- */}
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <SectionHeading
+              chapter="01"
               subtitle="Full-Stack Capabilities"
               title="Tailored Technology For Modern Business"
               description="From initial architectural design to high-throughput cloud deployment and ongoing support, we deliver robust solutions across every stage of the technology lifecycle."
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {servicesData.map((svc) => {
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {servicesData.map((svc, idx) => {
                 const Icon = iconMap[svc.slug] || Code;
-                return (
-                  <div
-                    key={svc.slug}
-                    className="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-sm hover:shadow-cardHover transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
-                  >
-                    <div>
-                      <div className="w-14 h-14 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white flex items-center justify-center transition-colors mb-6">
-                        <Icon className="w-7 h-7" />
-                      </div>
-                      <h3 className="font-heading font-bold text-xl text-heading mb-3 group-hover:text-primary transition-colors">
-                        {svc.title}
-                      </h3>
-                      <p className="text-sm text-bodyText leading-relaxed mb-6">
-                        {svc.shortDesc}
-                      </p>
-                    </div>
+                const indexStr = String(idx + 1).padStart(2, "0");
+                const tags = svc.technologies ? svc.technologies.slice(0, 3) : ["Enterprise", "Cloud", "Agile"];
 
-                    <div className="pt-4 border-t border-slate-100">
-                      <Link
-                        to={`/services/${svc.slug}`}
-                        className="inline-flex items-center gap-2 text-sm font-semibold text-primary group-hover:text-navy transition-colors"
-                      >
-                        <span>Learn More</span>
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </div>
-                  </div>
+                return (
+                  <CapabilityTile
+                    key={svc.slug}
+                    index={indexStr}
+                    title={svc.title}
+                    description={svc.shortDesc}
+                    tags={tags}
+                    href={`/services/${svc.slug}`}
+                    icon={Icon}
+                    dark={false}
+                  />
                 );
               })}
             </div>
 
             {/* ---------- SECTION: Consultation Banner ---------- */}
             <CTABanner
-              title="Need a custom solution tailored to your enterprise?"
-              description="Speak with our principal software architects in Pune to design a custom engineering roadmap for your business."
-              buttonText="Schedule a Consultation"
-              buttonLink="/contact"
+              title="Ready to Transform Your Digital Infrastructure?"
+              description="Connect with our software architects in Baner, Pune to discuss your upcoming project requirements, technical specifications, and timeline."
+              primaryBtnText="Schedule a Consultation"
+              primaryBtnLink="/contact"
+              secondaryBtnText="Explore Client Success"
+              secondaryBtnLink="/about"
             />
           </div>
         </section>

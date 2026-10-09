@@ -41,25 +41,25 @@ A production-ready, high-performance Single Page Application (SPA) built for **L
 
 ---
 
-## 🎨 Design System & Brand Colors
+## 🎨 Design System & Brand Colors (v2 MONOCHROME)
 
-The UI strictly adheres to the LQSIPL brand guidelines defined in [COLOR-SYSTEM.md](COLOR-SYSTEM.md). Below is the core color palette used throughout the application:
+The UI strictly adheres to the architectural monochrome design guidelines defined in [COLOR-SYSTEM.md](COLOR-SYSTEM.md). Below is the core grayscale ramp used throughout the application:
 
 | Color Name | Token | Hex Code | Role / Usage |
 | :--- | :--- | :--- | :--- |
-| **Earth 600** *(Primary)* | `brand.earth.600` | `#986B14` | Nav, header, banners, primary buttons, icons |
-| **Earth 900** *(Deep Canvas)*| `brand.earth.900` | `#3E2A08` | Footer bg, top bar, dark sections, hero gradient start |
-| **Earth 500** | `brand.earth.500` | `#B1831F` | Gradient ends, secondary accents |
-| **Pollen 400** *(Attention)* | `brand.pollen.400` | `#FFC91B` | CTA buttons, highlights, icons, underlines, active nav |
-| **Pollen 300** *(Highlight)* | `brand.pollen.300` | `#FFDC4F` | Headings/text on dark brown, badge highlights |
-| **Pollen 200** | `brand.pollen.200` | `#FFE684` | Light highlight badge |
-| **Black** | — | `#000000` | Primary heading text on light backgrounds |
-| **White** | — | `#FFFFFF` | Main page background, card surfaces, body text on dark |
-| **Neutral 600** *(Body Text)*| `brand.neutral.600`| `#5A4D3D` | Primary readable body prose |
-| **Neutral 50** *(Soft Bg)* | `brand.neutral.50` | `#FAF8F5` | Alternating section backgrounds |
-| **Neutral 200** *(Borders)* | `brand.neutral.200`| `#E2DACC` | Borders, subtle dividers, cards |
-| **Neutral 500** *(Muted)* | `brand.neutral.500`| `#7C6B55` | Captions, metadata, secondary text |
-| **WhatsApp Green** | — | `#25D366` | Floating WhatsApp widget (Official brand color) |
+| **Black** | `mono.black` | `#000000` | True dark canvas, footer background, primary heading text on light |
+| **Mono 950** | `mono.950` | `#0A0A0A` | Dark section surface, elevated dark cards, inputs |
+| **Mono 900** | `mono.900` | `#171717` | Elevated dark surface, secondary dark cards |
+| **Mono 800** | `mono.800` | `#2A2A2A` | Dark hover fills |
+| **Mono 600** | `mono.600` | `#5C5C5C` | Body text on light backgrounds |
+| **Mono 500** | `mono.500` | `#7E7E7E` | Captions, meta labels, secondary text |
+| **Mono 400** | `mono.400` | `#A8A8A8` | Captions, phase numbers |
+| **Mono 300** | `mono.300` | `#D4D4D4` | Accent hairline underlines, disabled states |
+| **Mono 200** | `mono.200` | `#E7E7E7` | Borders & hairlines on light sections |
+| **Mono 100** | `mono.100` | `#F4F4F4` | Light cards, hover fills on light |
+| **Mono 50** | `mono.50` | `#FAFAFA` | Lightest surface, alternating section backgrounds |
+| **White** | `mono.white` | `#FFFFFF` | Base light background, headings on dark, primary CTAs on dark |
+| **WhatsApp Green** | `whatsapp` | `#25D366` | Floating WhatsApp widget (Official brand color) |
 
 ---
 
@@ -94,18 +94,28 @@ src/
 ├── App.jsx                   # Route declarations only (no page logic)
 │
 ├── components/               # Shared components (used by 2+ pages)
-│   ├── Header.jsx            # Top bar, sticky navbar & mobile drawer
-│   ├── Footer.jsx            # 4-column footer with contact & map
+│   ├── Header.jsx            # Morphing floating nav pill (P02)
+│   ├── Footer.jsx            # Full-height climax footer with Baner coordinates (P09)
 │   ├── WhatsAppWidget.jsx    # Floating bottom-right WhatsApp widget
 │   ├── ScrollToTop.jsx       # Automatic window scroll on route changes
 │   ├── SEO.jsx               # react-helmet-async meta tags & title
 │   ├── Counter.jsx           # Animated scroll count-up numbers
-│   ├── SectionHeading.jsx    # Uniform section title & gold accent line
-│   ├── PageBanner.jsx        # Reusable gradient banner for inner pages
+│   ├── SectionHeading.jsx    # Uniform section title with ChapterAnchor support
+│   ├── PageBanner.jsx        # Reusable dark banner with InkReveal & CAD grid
 │   ├── CTABanner.jsx         # Reusable bottom conversion banner
 │   ├── Lightbox.jsx          # Gallery modal with arrow & keyboard controls
-│   └── job/
-│       └── JobModal.jsx      # Application form modal with resume validation
+│   ├── job/
+│   │   └── JobModal.jsx      # Application form modal with resume validation
+│   └── daq/                  # DAQ Engineering Design System Suite
+│       ├── InkReveal.jsx     # P01: Liquid Ink stroke/fill text reveal for dark heroes
+│       ├── ChapterAnchor.jsx # P03: Monospace chapter index & hairline rule (e.g. 01 / TITLE)
+│       ├── TechPill.jsx      # P04: Monospace uppercase tech stack tag pills
+│       ├── CounterStrip.jsx  # P05: Tabular-nums animated metric counter strip
+│       ├── ReadingRows.jsx   # P06: Hairline-divided expandable editorial reading rows
+│       ├── CapabilityTile.jsx# P08: Architectural bento capability tile with hover translate
+│       ├── IntroCurtain.jsx  # P13: SessionStorage-gated SVG outline trace entrance curtain
+│       ├── ManifestoStage.jsx# Section 2: Scrollytelling manifesto liquid-ink reveal & values
+│       └── StepperRail.jsx   # Section 3: DAQ "Neural Core" 6-stage vertical left-rail stepper
 │
 ├── data/                     # Content data arrays (Decoupled from UI)
 │   ├── services.js           # 10 core service items & deliverables

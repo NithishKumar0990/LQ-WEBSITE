@@ -7,6 +7,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import WhatsAppWidget from "./components/WhatsAppWidget";
 import ScrollToTop from "./components/ScrollToTop";
+import SmoothScroll from "./components/SmoothScroll";
 
 // Page Components (Strict: 1 Page = 1 File)
 import HomePage from "./pages/HomePage";
@@ -27,6 +28,7 @@ export default function App() {
     <HelmetProvider>
       <BrowserRouter>
         <ScrollToTop />
+        <SmoothScroll />
         <div className="flex flex-col min-h-screen">
           <Header />
           <div className="flex-grow">

@@ -1,29 +1,98 @@
 @import "tailwindcss";
 @config "../tailwind.config.js";
 
+:root {
+  --color-bg: #F7F7F7;
+  --color-surface: #EEEEEE;
+  --color-ink: #393E46;
+  --color-muted: #929AAB;
+}
+
+@theme {
+  --color-bg: #F7F7F7;
+  --color-surface: #EEEEEE;
+  --color-ink: #393E46;
+  --color-muted: #929AAB;
+  --color-brand-bg: #F7F7F7;
+  --color-brand-surface: #EEEEEE;
+  --color-brand-ink: #393E46;
+  --color-brand-muted: #929AAB;
+  --color-mono-50: #F7F7F7;
+  --color-mono-100: #EEEEEE;
+  --color-mono-200: #EEEEEE;
+  --color-mono-300: #929AAB;
+  --color-mono-400: #929AAB;
+  --color-mono-500: #929AAB;
+  --color-mono-600: #393E46;
+  --color-mono-700: #393E46;
+  --color-mono-800: #393E46;
+  --color-mono-900: #393E46;
+  --color-mono-950: #393E46;
+  --color-mono-black: #393E46;
+  --color-mono-white: #F7F7F7;
+  --color-black: #393E46;
+  --color-white: #F7F7F7;
+}
+
+::selection {
+  background-color: #393E46;
+  color: #F7F7F7;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    font-family: 'Roboto', sans-serif;
-    color: #5A4D3D;
-    background-color: #FFFFFF;
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    color: var(--color-ink, #393E46);
+    background-color: var(--color-bg, #F7F7F7);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Roboto Slab', serif;
-    color: #000000;
+  h1 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--color-ink, #393E46);
   }
 
-  .bg-navy h1, .bg-navy h2, .bg-navy h3, .bg-navy h4, .bg-navy h5, .bg-navy h6,
-  [class*="from-navy"] h1, [class*="from-navy"] h2, [class*="from-navy"] h3, [class*="from-navy"] h4, [class*="from-navy"] h5, [class*="from-navy"] h6,
-  [class*="from-primary"] h1, [class*="from-primary"] h2, [class*="from-primary"] h3, [class*="from-primary"] h4, [class*="from-primary"] h5, [class*="from-primary"] h6,
-  [class*="bg-primary"] h1, [class*="bg-primary"] h2, [class*="bg-primary"] h3, [class*="bg-primary"] h4, [class*="bg-primary"] h5, [class*="bg-primary"] h6,
-  [class*="bg-brand-earth"] h1, [class*="bg-brand-earth"] h2, [class*="bg-brand-earth"] h3, [class*="bg-brand-earth"] h4, [class*="bg-brand-earth"] h5, [class*="bg-brand-earth"] h6,
-  [class*="from-brand-earth"] h1, [class*="from-brand-earth"] h2, [class*="from-brand-earth"] h3, [class*="from-brand-earth"] h4, [class*="from-brand-earth"] h5, [class*="from-brand-earth"] h6 {
-    color: #FFDC4F;
+  h2 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--color-ink, #393E46);
+  }
+
+  h3 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    color: var(--color-ink, #393E46);
+  }
+
+  h4, h5, h6 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.20;
+    letter-spacing: -0.012em;
+    color: var(--color-ink, #393E46);
+  }
+
+  input, textarea, select, button {
+    font-family: inherit;
+  }
+
+  .bg-black h1, .bg-black h2, .bg-black h3, .bg-black h4, .bg-black h5, .bg-black h6,
+  [class*="bg-mono-950"] h1, [class*="bg-mono-950"] h2, [class*="bg-mono-950"] h3, [class*="bg-mono-950"] h4, [class*="bg-mono-950"] h5, [class*="bg-mono-950"] h6,
+  [class*="bg-mono-900"] h1, [class*="bg-mono-900"] h2, [class*="bg-mono-900"] h3, [class*="bg-mono-900"] h4, [class*="bg-mono-900"] h5, [class*="bg-mono-900"] h6 {
+    color: var(--color-bg, #F7F7F7);
   }
 }
 
@@ -41,3 +110,177 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* P07: CAD Blueprint Grid Canvas */
+.cad-grid {
+  background-image: 
+    linear-gradient(90deg, rgba(247, 247, 247, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(247, 247, 247, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* P01: Liquid Ink Stroke & Mask Utilities */
+.ink-stroke {
+  -webkit-text-stroke: 1px rgba(247, 247, 247, 0.32);
+  color: transparent;
+}
+
+/* ═══════════════════════════════════════
+   REFERENCE-WEBSITE-2 TYPOGRAPHY SCALE
+   ═══════════════════════════════════════ */
+@layer components {
+  /* --- Display & Sans (Articulat CF) --- */
+  .text-hero-display {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(2.4rem, 5.5vw, 4.4rem);
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+  }
+  .text-section-dark {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(2.1rem, 4.2vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+  .text-section-light {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(1.5rem, 2.6vw, 2.3rem);
+    font-weight: 500;
+    line-height: 1.10;
+    letter-spacing: -0.02em;
+  }
+  .text-article-h1 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(2.05rem, 4.6vw, 3.7rem);
+    font-weight: 700;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+  .text-article-h2 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+    font-weight: 700;
+    line-height: 1.16;
+    letter-spacing: -0.015em;
+  }
+  .text-article-h3 {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(1.18rem, 1.7vw, 1.42rem);
+    font-weight: 700;
+    line-height: 1.20;
+    letter-spacing: -0.012em;
+  }
+  .text-card-title {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: clamp(1.3rem, 1.8vw, 1.65rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+  .text-card-body {
+    font-family: 'Articulat CF', articulat-cf, system-ui, sans-serif;
+    font-size: 0.92rem;
+    font-weight: 400;
+    line-height: 1.55;
+  }
+
+  /* --- Editorial Literary Serif (Iowan Old Style) --- */
+  .text-hero-lede {
+    font-family: 'Iowan Old Style', iowan-old-style-bt, 'Georgia', serif;
+    font-size: clamp(1.1rem, 1.6vw, 1.42rem);
+    font-weight: 400;
+    line-height: 1.52;
+    letter-spacing: -0.005em;
+  }
+  .text-hero-tag {
+    font-family: 'Iowan Old Style', iowan-old-style-bt, 'Georgia', serif;
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .text-footer-headline {
+    font-family: 'Iowan Old Style', iowan-old-style-bt, 'Georgia', serif;
+    font-size: clamp(1.7rem, 3.0vw, 2.7rem);
+    font-weight: 400;
+    line-height: 1.20;
+    letter-spacing: -0.006em;
+  }
+  .text-article-lead {
+    font-family: 'Iowan Old Style', iowan-old-style-bt, 'Georgia', serif;
+    font-size: 1.36rem;
+    font-weight: 400;
+    line-height: 1.64;
+  }
+  .text-article-body {
+    font-family: 'Iowan Old Style', iowan-old-style-bt, 'Georgia', serif;
+    font-size: 1.16rem;
+    font-weight: 400;
+    line-height: 1.78;
+  }
+
+  /* --- Command-Line Monospace (Roboto Mono) --- */
+  .text-eyebrow {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.00;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+  .text-step-index {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    font-weight: 500;
+    line-height: 1.00;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .text-nav-btn {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.00;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .text-metadata {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 0.78rem;
+    font-weight: 400;
+    line-height: 1.60;
+    letter-spacing: 0.06em;
+  }
+  .text-form-label {
+    font-family: 'Roboto Mono', ui-monospace, monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    line-height: 1.00;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+}
+
+/* ═══════════════════════════════════════
+   ARCHITECTURAL DRAFTING UTILITIES (The Nest)
+   ═══════════════════════════════════════ */
+.rd-grid-backdrop {
+  background-image: 
+    linear-gradient(to right, rgba(57, 62, 70, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(57, 62, 70, 0.03) 1px, transparent 1px);
+  background-size: 8.3333% 100%, 100% 240px;
+}
+
+.rd-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.rd-underline:hover {
+  background-size: 100% 1px;
+}
+

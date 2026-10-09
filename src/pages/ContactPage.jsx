@@ -1,11 +1,12 @@
 // ═══════════════════════════════════════
-// PAGE: Contact (/contact) — Contact Us
-// SECTIONS: Banner, Contact Info Cards, Contact Form, Google Maps Embed
+// PAGE: Contact (/contact) — Architectural Contact Experience
+// CLONED PATTERN: The Nest (thenest.pl/contact) Forensics (Reference-Website-3.md)
+// THEME: Architectural Monochrome (COLOR-SYSTEM.md) + LQSIPL Corporate Content
 // ═══════════════════════════════════════
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
-import PageBanner from "../components/PageBanner";
 import {
   WEB3FORMS_ACCESS_KEY,
   COMPANY_PHONE,
@@ -16,32 +17,58 @@ import {
   COMPANY_HOURS_WEEKEND,
   LINKEDIN_URL,
   INSTAGRAM_URL,
+  WHATSAPP_LINK,
   GOOGLE_MAPS_EMBED_URL,
 } from "../config";
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-  Send,
-  CheckCircle2,
-  AlertCircle,
-} from "lucide-react";
+import { Home, ChevronRight, Check } from "lucide-react";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
+    phone: "",
+    service: "cloud-web",
     message: "",
+    honeypot: "",
+    consent: false,
   });
+
+  const [focusedField, setFocusedField] = useState(null);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState("idle"); // idle | success | error
-  const [statusMessage, setStatusMessage] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+
+  const serviceOptions = [
+    {
+      id: "cloud-web",
+      label: "Cloud & Web Apps",
+      guidance: "Full-stack web architectures, distributed systems, and scalable cloud deployments.",
+    },
+    {
+      id: "enterprise",
+      label: "Enterprise Software",
+      guidance: "Custom ERP platforms, dedicated maintenance SLAs, and legacy code modernization.",
+    },
+    {
+      id: "ai-ml-rpa",
+      label: "AI, ML & RPA",
+      guidance: "Intelligent process automation, predictive machine learning models, and data pipelines.",
+    },
+    {
+      id: "other",
+      label: "Something else",
+      guidance: "Strategic technology selection, architectural consulting, or tailored partnerships.",
+    },
+  ];
+
+  const selectedGuidance =
+    serviceOptions.find((opt) => opt.id === formData.service)?.guidance ||
+    serviceOptions[0].guidance;
 
   const validate = () => {
     const newErrors = {};
+
     if (!formData.name.trim()) {
       newErrors.name = "Full name is required.";
     }
@@ -55,12 +82,12 @@ export default function ContactPage() {
       }
     }
 
-    if (!formData.subject.trim()) {
-      newErrors.subject = "Subject is required.";
-    }
-
     if (!formData.message.trim()) {
       newErrors.message = "Message content is required.";
+    }
+
+    if (!formData.consent) {
+      newErrors.consent = "You must agree to communication processing.";
     }
 
     setErrors(newErrors);
@@ -75,20 +102,32 @@ export default function ContactPage() {
     }
   };
 
+  const handleServiceSelect = (serviceId) => {
+    setFormData((prev) => ({ ...prev, service: serviceId }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitError("");
+
+    // Anti-Spam Honeypot check: silently fake success if bot populated invisible field
+    if (formData.honeypot) {
+      console.warn("Spam honeypot triggered.");
+      setIsSuccessOpen(true);
+      return;
+    }
+
     if (!validate()) return;
 
     setIsSubmitting(true);
-    setStatus("idle");
-    setStatusMessage("");
 
     const payload = new FormData();
     payload.append("access_key", WEB3FORMS_ACCESS_KEY);
-    payload.append("from_name", "LQSIPL Contact Inquiry");
+    payload.append("from_name", "LQSIPL Contact Dispatch");
     payload.append("name", formData.name);
     payload.append("email", formData.email);
-    payload.append("subject", formData.subject);
+    payload.append("phone", formData.phone || "Not provided");
+    payload.append("service_interest", formData.service);
     payload.append("message", formData.message);
 
     try {
@@ -100,22 +139,25 @@ export default function ContactPage() {
       const data = await response.json();
 
       if (data.success) {
-        setStatus("success");
-        setStatusMessage(
-          "Thank you for reaching out! Your message has been transmitted successfully. Our technical consulting team will respond promptly."
-        );
-        setFormData({ name: "", email: "", subject: "", message: "" });
+        setIsSuccessOpen(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          service: "cloud-web",
+          message: "",
+          honeypot: "",
+          consent: false,
+        });
       } else {
-        setStatus("error");
-        setStatusMessage(
+        setSubmitError(
           data.message ||
-            `Unable to transmit your message. Please try again or email us directly at ${COMPANY_EMAIL}.`
+            `Unable to transmit your message right now. You can email us directly at ${COMPANY_EMAIL}.`
         );
       }
     } catch {
-      setStatus("error");
-      setStatusMessage(
-        `Network connection error. Please try again or email us directly at ${COMPANY_EMAIL}.`
+      setSubmitError(
+        `Network communication error. Please try again or email us directly at ${COMPANY_EMAIL}.`
       );
     } finally {
       setIsSubmitting(false);
@@ -125,297 +167,610 @@ export default function ContactPage() {
   return (
     <>
       <SEO
-        title="Contact - Leanqualities Solutions"
-        description="Get in touch with Leanquality Solutions India Pvt. Ltd. (LQSIPL) in Pune, India. Visit our office in Baner, call +91 9168331155, or email datta@leanqualities.com."
+        title="Contact Us | Leanquality Solutions India Pvt. Ltd"
+        description="Direct contact channels for Leanquality Solutions (LQSIPL) in Baner, Pune. Reach our engineering and technology consulting team first-hand."
       />
 
-      <main className="min-h-screen bg-lightBg">
-        {/* ---------- SECTION: Banner ---------- */}
-        <PageBanner
-          badge="Let's Connect"
-          title="We'd Love To Hear From You!"
-          subtitle="Reach out to our Pune headquarters for project inquiries, technical partnerships, or consulting assistance."
-        />
+      <main className="min-h-screen bg-mono-50 relative selection:bg-black selection:text-white pt-24 sm:pt-28 lg:pt-32">
+        {/* ═══════════════════════════════════════
+            SECTION 3.1: BREADCRUMBS BAR
+            Ref: thenest.pl/contact Breadcrumb bar
+        ═══════════════════════════════════════ */}
+        <nav
+          aria-label="Breadcrumb"
+          className="pt-8 sm:pt-10 pb-4 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16"
+        >
+          <ol className="flex items-center gap-1.5 sm:gap-2.5 text-xs sm:text-sm font-sans">
+            <li>
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1.5 text-mono-500 hover:text-black transition-colors"
+              >
+                <Home className="w-3.5 h-3.5" />
+                <span>Home</span>
+              </Link>
+            </li>
+            <li aria-hidden="true">
+              <ChevronRight className="w-3.5 h-3.5 text-mono-300" />
+            </li>
+            <li>
+              <span className="text-black font-medium" aria-current="page">
+                Contact
+              </span>
+            </li>
+          </ol>
+        </nav>
 
-        {/* ---------- SECTION: Contact Content & Form ---------- */}
-        <section className="py-16 lg:py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-              {/* ---------- SECTION: Contact Info Cards ---------- */}
-              <div className="lg:col-span-5 space-y-6">
-                <div>
-                  <h2 className="font-heading text-2xl font-bold text-heading">
-                    Get in touch
-                  </h2>
-                  <div className="w-12 h-1 bg-gold my-3 rounded-full" />
-                  <p className="text-sm text-bodyText leading-relaxed">
-                    Our engineering and consulting teams are here to help scale your digital ecosystem. Connect directly or drop by our Baner office.
-                  </p>
-                </div>
+        {/* ═══════════════════════════════════════
+            SECTION 3.2: HERO HEADER BLOCK WITH ARCHITECTURAL GRID
+            Ref: thenest.pl/contact Hero Display H1 + Lead Paragraph
+        ═══════════════════════════════════════ */}
+        <section className="relative overflow-clip pb-12 sm:pb-16 max-w-7xl mx-auto px-6 sm:px-10 lg:px-16">
+          {/* Subtle architectural 12-column x 240px grid backdrop */}
+          <div
+            className="rd-grid-backdrop absolute inset-0 pointer-events-none"
+            aria-hidden="true"
+          />
 
-                {/* Office Address Card */}
-                <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <MapPin className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-base font-bold text-heading">
-                      Office Address
-                    </h3>
-                    <p className="text-xs text-bodyText leading-relaxed mt-1">
-                      {COMPANY_ADDRESS}
-                    </p>
-                  </div>
-                </div>
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start pt-4 sm:pt-6">
+            {/* Left Column (Cols 1-6): Category Badge + Display H1 */}
+            <div className="lg:col-span-6">
+              <span className="font-mono text-[11px] font-semibold tracking-[0.2em] uppercase text-mono-500 block">
+                Contact
+              </span>
+              <h1 className="mt-4 sm:mt-6 text-[clamp(2.4rem,5.5vw,4.2rem)] leading-[1.02] tracking-[-0.02em] text-black select-none font-heading font-bold">
+                <span className="block overflow-hidden pb-[0.08em]">
+                  <span className="inline-block">Write, call</span>
+                </span>
+                <span className="block overflow-hidden pb-[0.08em]">
+                  <span className="inline-block italic font-serif font-normal text-mono-600">
+                    or drop by.
+                  </span>
+                </span>
+              </h1>
+            </div>
 
-                {/* Phone Card */}
-                <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-base font-bold text-heading">
-                      Phone Number
-                    </h3>
-                    <p className="text-xs text-bodyText mt-1">Direct call or WhatsApp:</p>
-                    <a
-                      href={`tel:${COMPANY_PHONE_TEL}`}
-                      className="text-sm font-semibold text-primary hover:text-navy transition-colors mt-0.5 inline-block"
-                    >
-                      {COMPANY_PHONE}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Email Card */}
-                <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Mail className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-base font-bold text-heading">
-                      Email Address
-                    </h3>
-                    <p className="text-xs text-bodyText mt-1">General & project inquiries:</p>
-                    <a
-                      href={`mailto:${COMPANY_EMAIL}`}
-                      className="text-sm font-semibold text-primary hover:text-navy transition-colors mt-0.5 inline-block"
-                    >
-                      {COMPANY_EMAIL}
-                    </a>
-                  </div>
-                </div>
-
-                {/* Working Hours Card */}
-                <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    <Clock className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading text-base font-bold text-heading">
-                      Working Hours
-                    </h3>
-                    <div className="text-xs text-bodyText space-y-1 mt-1">
-                      <p>{COMPANY_HOURS_WEEKDAY}</p>
-                      <p>{COMPANY_HOURS_WEEKEND}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Social Channels */}
-                <div className="bg-navy text-white rounded-2xl p-6 flex items-center justify-between">
-                  <div>
-                    <h4 className="font-heading font-semibold text-sm text-yellowLight">Follow Our Channels</h4>
-                    <p className="text-xs text-slate-300">Stay updated on events and updates</p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <a
-                      href={LINKEDIN_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-white/10 hover:bg-gold hover:text-navy text-white flex items-center justify-center transition-colors"
-                      aria-label="LinkedIn"
-                    >
-                      <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                      </svg>
-                    </a>
-                    <a
-                      href={INSTAGRAM_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-full bg-white/10 hover:bg-gold hover:text-navy text-white flex items-center justify-center transition-colors"
-                      aria-label="Instagram"
-                    >
-                      <svg className="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                        <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* ---------- SECTION: Contact Form ---------- */}
-              <div className="lg:col-span-7">
-                <div className="bg-white rounded-2xl p-8 lg:p-10 border border-slate-200/80 shadow-lg">
-                  <div className="mb-6">
-                    <h3 className="font-heading text-2xl font-bold text-heading">
-                      Send Us a Message
-                    </h3>
-                    <p className="text-sm text-bodyText mt-1">
-                      Have an inquiry, project proposal, or question? Leave your details below and our technical consulting team will respond promptly.
-                    </p>
-                  </div>
-
-                  {status === "success" && (
-                    <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 text-emerald-800 text-sm animate-fadeIn">
-                      <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-600" />
-                      <div>
-                        <p className="font-semibold">Message Delivered!</p>
-                        <p className="text-xs mt-1 text-emerald-700">{statusMessage}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {status === "error" && (
-                    <div className="mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-rose-800 text-sm animate-fadeIn">
-                      <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-600" />
-                      <div>
-                        <p className="font-semibold">Submission Notice</p>
-                        <p className="text-xs mt-1 text-rose-700">{statusMessage}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div>
-                        <label className="block text-xs font-semibold text-heading mb-1.5">
-                          Full Name <span className="text-rose-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          placeholder="Your full name"
-                          className={`w-full px-4 py-3 rounded-xl border text-sm text-heading placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${
-                            errors.name
-                              ? "border-rose-400 focus:ring-rose-200"
-                              : "border-slate-300 focus:ring-primary/20 focus:border-primary"
-                          }`}
-                        />
-                        {errors.name && (
-                          <p className="text-xs text-rose-500 mt-1">{errors.name}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-heading mb-1.5">
-                          Email Address <span className="text-rose-500">*</span>
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="your.email@company.com"
-                          className={`w-full px-4 py-3 rounded-xl border text-sm text-heading placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${
-                            errors.email
-                              ? "border-rose-400 focus:ring-rose-200"
-                              : "border-slate-300 focus:ring-primary/20 focus:border-primary"
-                          }`}
-                        />
-                        {errors.email && (
-                          <p className="text-xs text-rose-500 mt-1">{errors.email}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-heading mb-1.5">
-                        Subject <span className="text-rose-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
-                        placeholder="Project inquiry, consulting, or general question"
-                        className={`w-full px-4 py-3 rounded-xl border text-sm text-heading placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${
-                          errors.subject
-                            ? "border-rose-400 focus:ring-rose-200"
-                            : "border-slate-300 focus:ring-primary/20 focus:border-primary"
-                        }`}
-                      />
-                      {errors.subject && (
-                        <p className="text-xs text-rose-500 mt-1">{errors.subject}</p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold text-heading mb-1.5">
-                        Message <span className="text-rose-500">*</span>
-                      </label>
-                      <textarea
-                        name="message"
-                        rows={5}
-                        value={formData.message}
-                        onChange={handleChange}
-                        placeholder="Tell us about your project requirements, technology needs, or objectives..."
-                        className={`w-full px-4 py-3 rounded-xl border text-sm text-heading placeholder:text-slate-400 transition-all focus:outline-none focus:ring-2 ${
-                          errors.message
-                            ? "border-rose-400 focus:ring-rose-200"
-                            : "border-slate-300 focus:ring-primary/20 focus:border-primary"
-                        }`}
-                      />
-                      {errors.message && (
-                        <p className="text-xs text-rose-500 mt-1">{errors.message}</p>
-                      )}
-                    </div>
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-primary text-white font-medium hover:bg-navy hover:text-gold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-primary/25"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          <span>Sending Message...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4" />
-                          <span>Send Message</span>
-                        </>
-                      )}
-                    </button>
-                  </form>
-                </div>
-              </div>
+            {/* Right Column (Cols 8-12): Human Lead Paragraph */}
+            <div className="lg:col-span-5 lg:col-start-8 pt-1 sm:pt-4">
+              <p className="text-base sm:text-lg leading-relaxed text-mono-600 font-sans max-w-xl">
+                There is no call centre and no ticket queue behind this form.
+                Your message goes directly to our core engineering and leadership
+                team in Baner, Pune and answers first-hand.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* ---------- SECTION: Google Maps Embed ---------- */}
-        <section className="w-full bg-white border-t border-slate-200">
-          <div className="w-full h-[450px] relative">
-            <iframe
-              src={GOOGLE_MAPS_EMBED_URL}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen={false}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Leanquality Solutions Baner Pune Location"
-              className="w-full h-full grayscale-[20%] hover:grayscale-0 transition-all duration-300"
-            />
+        {/* ═══════════════════════════════════════
+            SECTION 3.3 & 3.4: TWO-COLUMN MAIN WORKBENCH
+            Column 1: "At a glance" Quick Facts & Architectural Map
+            Column 2: "Your message" Architecture Contact Form
+        ═══════════════════════════════════════ */}
+        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 pb-24 sm:pb-32 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            {/* ──────────────────────────────────
+                COLUMN 1: AT A GLANCE (Cols 1-5)
+            ────────────────────────────────── */}
+            <div className="lg:col-span-5 space-y-6">
+              <div>
+                <p className="font-mono text-[11px] font-semibold tracking-[0.14em] uppercase text-mono-500 mb-4">
+                  At a glance
+                </p>
+
+                {/* Definition List with Hairline Borders */}
+                <dl className="border-t border-mono-200">
+                  {/* Phone */}
+                  <div className="border-b border-mono-200 py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <dt className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase text-mono-400">
+                      Phone
+                    </dt>
+                    <dd className="text-[0.95rem] leading-snug text-black">
+                      <a
+                        href={`tel:${COMPANY_PHONE_TEL}`}
+                        className="rd-underline font-mono font-medium hover:text-black transition-colors inline-block"
+                      >
+                        {COMPANY_PHONE}
+                      </a>
+                    </dd>
+                  </div>
+
+                  {/* E-mail */}
+                  <div className="border-b border-mono-200 py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <dt className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase text-mono-400">
+                      E-mail
+                    </dt>
+                    <dd className="text-[0.95rem] leading-snug text-black">
+                      <a
+                        href={`mailto:${COMPANY_EMAIL}`}
+                        className="rd-underline font-mono font-medium hover:text-black transition-colors inline-block"
+                      >
+                        {COMPANY_EMAIL}
+                      </a>
+                    </dd>
+                  </div>
+
+                  {/* Reception Hours */}
+                  <div className="border-b border-mono-200 py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <dt className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase text-mono-400">
+                      Reception
+                    </dt>
+                    <dd className="text-[0.95rem] leading-snug text-mono-800 text-left sm:text-right font-sans">
+                      <div>Mon–Fri, 09:00–20:00 IST</div>
+                      <div className="text-xs text-mono-500 font-mono">
+                        Sat–Sun, 10:00–19:00 IST
+                      </div>
+                    </dd>
+                  </div>
+
+                  {/* Address */}
+                  <div className="border-b border-mono-200 py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <dt className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase text-mono-400 shrink-0">
+                      Address
+                    </dt>
+                    <dd className="text-[0.95rem] leading-snug text-mono-800 text-left sm:text-right max-w-xs font-sans">
+                      1st Floor, Office 101, Trident Business Center, Baner, Pune 411045
+                    </dd>
+                  </div>
+
+                  {/* Getting here */}
+                  <div className="border-b border-mono-200 py-3.5 flex flex-col sm:flex-row sm:items-baseline justify-between gap-1">
+                    <dt className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase text-mono-400 shrink-0">
+                      Getting here
+                    </dt>
+                    <dd className="text-[0.92rem] leading-snug text-mono-700 text-left sm:text-right max-w-xs font-sans">
+                      Opposite Audi Showroom, Pune-Bangalore Highway — 5 mins from Mumbai-Pune Expressway exit
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+
+              {/* Concentric Double Border Map Framing (PhotoPlate Pattern) */}
+              <div className="relative my-8">
+                {/* Outer Ring 1: Offset -12px to -16px */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-3 lg:-inset-4 border border-mono-200"
+                />
+                {/* Outer Ring 2: Offset -7px to -9px */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-[7px] lg:-inset-[9px] border border-mono-200"
+                />
+                {/* Inner Media Frame */}
+                <div className="relative overflow-hidden rounded-2xl border border-mono-300 h-72 md:h-80 bg-mono-100">
+                  <iframe
+                    src={GOOGLE_MAPS_EMBED_URL}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={false}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Leanquality Solutions Baner Pune Location"
+                    className="w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
+                  />
+                </div>
+              </div>
+
+              {/* Map Annotation Sub-Bar */}
+              <div className="border-t border-mono-200 pt-3 mt-4 flex items-baseline justify-between">
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-mono-500">
+                  Baner, Pune on the map
+                </span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-black font-semibold">
+                  LQSIPL HQ
+                </span>
+              </div>
+
+              {/* Social Channels Sub-Bar */}
+              <div className="border-t border-mono-200 pt-5 mt-6 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-mono-400 block">
+                    CHANNELS
+                  </span>
+                  <span className="text-xs text-mono-600 font-sans">
+                    Official Networks
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <a
+                    href={LINKEDIN_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 border border-mono-200 text-black hover:border-black hover:bg-black hover:text-white transition-all font-mono text-xs uppercase tracking-wider rounded"
+                    aria-label="LinkedIn"
+                  >
+                    LinkedIn
+                  </a>
+                  <a
+                    href={INSTAGRAM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 border border-mono-200 text-black hover:border-black hover:bg-black hover:text-white transition-all font-mono text-xs uppercase tracking-wider rounded"
+                    aria-label="Instagram"
+                  >
+                    Instagram
+                  </a>
+                  <a
+                    href={WHATSAPP_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 border border-mono-200 text-black hover:border-black hover:bg-black hover:text-white transition-all font-mono text-xs uppercase tracking-wider rounded"
+                    aria-label="WhatsApp"
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* ──────────────────────────────────
+                COLUMN 2: YOUR MESSAGE (Cols 7-12)
+            ────────────────────────────────── */}
+            <div className="lg:col-span-6 lg:col-start-7">
+              {/* Section Heading */}
+              <div>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-black tracking-tight">
+                  Your message
+                </h2>
+                <p className="mt-3 max-w-xl text-base leading-relaxed text-mono-600 font-sans">
+                  Fill in the form — on working days we reply the same day.
+                </p>
+              </div>
+
+              {/* Architectural Contact Form */}
+              <form onSubmit={handleSubmit} className="mt-8 space-y-6" noValidate>
+                {/* Anti-Spam Honeypot Field (Invisible to human users) */}
+                <input
+                  type="text"
+                  id="honeypot"
+                  name="honeypot"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.honeypot}
+                  onChange={handleChange}
+                  className="hidden"
+                  aria-hidden="true"
+                />
+
+                {/* Name Field (Floating Label) */}
+                <div className="relative group">
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    maxLength={200}
+                    value={formData.name}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("name")}
+                    onBlur={() => setFocusedField(null)}
+                    className={`peer w-full border bg-white px-5 py-4 transition-colors duration-300 focus:outline-none placeholder-transparent font-sans text-base text-black ${
+                      errors.name
+                        ? "border-red-500"
+                        : "border-mono-200 hover:border-mono-400 focus:border-black focus:ring-1 focus:ring-black"
+                    }`}
+                    placeholder="Name"
+                  />
+                  <label
+                    htmlFor="name"
+                    className={`absolute left-5 transition-all duration-300 pointer-events-none ${
+                      formData.name || focusedField === "name"
+                        ? "-top-2 bg-white px-2 font-mono text-[10px] font-semibold tracking-[0.14em] uppercase text-black"
+                        : "top-4 text-base text-mono-400 font-sans"
+                    }`}
+                  >
+                    Name <span className="text-black font-bold">*</span>
+                  </label>
+                  {errors.name && (
+                    <p
+                      id="name-error"
+                      className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                      role="alert"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
+
+                {/* E-mail Field (Floating Label) */}
+                <div className="relative group">
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    maxLength={254}
+                    value={formData.email}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("email")}
+                    onBlur={() => setFocusedField(null)}
+                    className={`peer w-full border bg-white px-5 py-4 transition-colors duration-300 focus:outline-none placeholder-transparent font-sans text-base text-black ${
+                      errors.email
+                        ? "border-red-500"
+                        : "border-mono-200 hover:border-mono-400 focus:border-black focus:ring-1 focus:ring-black"
+                    }`}
+                    placeholder="E-mail"
+                  />
+                  <label
+                    htmlFor="email"
+                    className={`absolute left-5 transition-all duration-300 pointer-events-none ${
+                      formData.email || focusedField === "email"
+                        ? "-top-2 bg-white px-2 font-mono text-[10px] font-semibold tracking-[0.14em] uppercase text-black"
+                        : "top-4 text-base text-mono-400 font-sans"
+                    }`}
+                  >
+                    E-mail <span className="text-black font-bold">*</span>
+                  </label>
+                  {errors.email && (
+                    <p
+                      id="email-error"
+                      className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                      role="alert"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+                      {errors.email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone Field (Optional, Floating Label) */}
+                <div className="relative group">
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    maxLength={40}
+                    value={formData.phone}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("phone")}
+                    onBlur={() => setFocusedField(null)}
+                    className="peer w-full border bg-white px-5 py-4 transition-colors duration-300 focus:outline-none placeholder-transparent border-mono-200 hover:border-mono-400 focus:border-black focus:ring-1 focus:ring-black font-sans text-base text-black"
+                    placeholder="Phone"
+                  />
+                  <label
+                    htmlFor="phone"
+                    className={`absolute left-5 transition-all duration-300 pointer-events-none ${
+                      formData.phone || focusedField === "phone"
+                        ? "-top-2 bg-white px-2 font-mono text-[10px] font-semibold tracking-[0.14em] uppercase text-black"
+                        : "top-4 text-base text-mono-400 font-sans"
+                    }`}
+                  >
+                    Phone{" "}
+                    <span className="text-mono-400 font-normal lowercase">
+                      (optional)
+                    </span>
+                  </label>
+                </div>
+
+                {/* Service Selection Radio Pills */}
+                <fieldset className="space-y-3 pt-1">
+                  <legend className="font-mono text-[11px] font-semibold tracking-[0.12em] uppercase text-mono-500">
+                    What is your enquiry about?
+                  </legend>
+                  <div className="flex flex-wrap gap-2">
+                    {serviceOptions.map((opt) => {
+                      const isActive = formData.service === opt.id;
+                      return (
+                        <label
+                          key={opt.id}
+                          className={`cursor-pointer border px-4 py-2.5 text-sm transition-colors duration-200 select-none ${
+                            isActive
+                              ? "border-black bg-black text-white"
+                              : "border-mono-200 bg-white text-mono-700 hover:border-mono-400"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="service"
+                            value={opt.id}
+                            checked={isActive}
+                            onChange={() => handleServiceSelect(opt.id)}
+                            className="sr-only"
+                          />
+                          {opt.label}
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  {/* Contextual guidance note with architectural tick mark */}
+                  <p className="flex items-start gap-3 text-xs sm:text-sm leading-relaxed text-mono-500 pt-1 font-sans">
+                    <span
+                      className="mt-[0.6em] h-px w-3 shrink-0 bg-mono-400"
+                      aria-hidden="true"
+                    />
+                    <span>{selectedGuidance}</span>
+                  </p>
+                </fieldset>
+
+                {/* Message Textarea (Floating Label) */}
+                <div className="relative group">
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={5}
+                    required
+                    maxLength={5000}
+                    value={formData.message}
+                    onChange={handleChange}
+                    onFocus={() => setFocusedField("message")}
+                    onBlur={() => setFocusedField(null)}
+                    className={`peer w-full resize-y border bg-white px-5 py-4 transition-colors duration-300 focus:outline-none placeholder-transparent font-sans text-base text-black ${
+                      errors.message
+                        ? "border-red-500"
+                        : "border-mono-200 hover:border-mono-400 focus:border-black focus:ring-1 focus:ring-black"
+                    }`}
+                    placeholder="Message"
+                  />
+                  <label
+                    htmlFor="message"
+                    className={`absolute left-5 transition-all duration-300 pointer-events-none ${
+                      formData.message || focusedField === "message"
+                        ? "-top-2 bg-white px-2 font-mono text-[10px] font-semibold tracking-[0.14em] uppercase text-black"
+                        : "top-4 text-base text-mono-400 font-sans"
+                    }`}
+                  >
+                    Message <span className="text-black font-bold">*</span>
+                  </label>
+                  {errors.message && (
+                    <p
+                      id="message-error"
+                      className="mt-2 text-sm text-red-600 flex items-center gap-1.5"
+                      role="alert"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* GDPR Data Controller Disclosure Card */}
+                <div className="space-y-2 border border-mono-200 bg-white/70 p-5 text-xs sm:text-sm text-mono-600 font-sans">
+                  <p>
+                    <strong className="text-black">The data controller</strong>{" "}
+                    is Leanquality Solutions India Pvt. Ltd (LQSIPL), based at
+                    Trident Business Center, Baner, Pune.
+                  </p>
+                  <p>
+                    Your contact information is processed exclusively to address
+                    your inquiry and maintain direct communication.
+                  </p>
+                  <p>
+                    You retain full rights to access, rectify, erase, or object
+                    to the processing of your information.
+                  </p>
+                </div>
+
+                {/* Consent Agreement Checkbox */}
+                <div>
+                  <div
+                    onClick={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        consent: !prev.consent,
+                      }))
+                    }
+                    className={`flex cursor-pointer items-start gap-3 border p-4 transition-colors bg-white select-none ${
+                      errors.consent
+                        ? "border-red-500"
+                        : "border-mono-200 hover:border-black"
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 shrink-0 flex items-center justify-center border transition-colors duration-200 ${
+                        formData.consent
+                          ? "border-black bg-black text-white"
+                          : "border-mono-300 bg-white"
+                      }`}
+                    >
+                      {formData.consent && (
+                        <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                      )}
+                    </div>
+                    <span className="text-xs sm:text-sm text-mono-600 leading-snug font-sans">
+                      I consent to Leanquality Solutions processing my contact
+                      details to respond to this message.{" "}
+                      <span className="text-black font-bold">*</span>
+                    </span>
+                  </div>
+                  {errors.consent && (
+                    <p className="mt-2 text-sm text-red-600 flex items-center gap-1.5" role="alert">
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-600 shrink-0" />
+                      {errors.consent}
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit Error Banner (if API fails) */}
+                {submitError && (
+                  <div className="p-4 border border-red-300 bg-red-50 text-red-800 text-sm">
+                    {submitError}
+                  </div>
+                )}
+
+                {/* Signature Kinetic Action CTA Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="group inline-flex min-h-12 items-center gap-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="flex h-12 w-12 items-center justify-center border border-black text-lg text-black transition-colors duration-300 group-hover:bg-black group-hover:text-white"
+                    >
+                      {isSubmitting ? (
+                        <svg
+                          className="h-5 w-5 animate-spin"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="3"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                          />
+                        </svg>
+                      ) : (
+                        "→"
+                      )}
+                    </span>
+                    <span className="text-sm font-medium tracking-[0.14em] text-black uppercase font-sans">
+                      {isSubmitting ? "Sending message..." : "Send message"}
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </section>
+        </div>
+
+        {/* ═══════════════════════════════════════
+            SUBMISSION SUCCESS DIALOG MODAL
+            Ref: thenest.pl/contact Success Dialog
+        ═══════════════════════════════════════ */}
+        {isSuccessOpen && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="success-modal-title"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
+          >
+            <div className="relative w-full max-w-lg bg-white border border-mono-200 p-8 md:p-10 shadow-2xl space-y-4">
+              <h2
+                id="success-modal-title"
+                className="font-heading text-3xl font-bold text-black tracking-tight"
+              >
+                Thank you!
+              </h2>
+              <p className="text-base text-mono-600 leading-relaxed font-sans">
+                Your message has been delivered directly to our engineering and
+                consulting team in Baner, Pune. On working days we reply the
+                same day.
+              </p>
+              <div className="pt-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsSuccessOpen(false)}
+                  className="group inline-flex items-center gap-3 px-6 py-2.5 bg-black text-white text-xs font-mono uppercase tracking-[0.14em] hover:bg-mono-800 transition-colors"
+                >
+                  <span>Close</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </>
   );

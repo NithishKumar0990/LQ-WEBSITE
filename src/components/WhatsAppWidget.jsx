@@ -13,7 +13,7 @@ export default function WhatsAppWidget() {
     >
       {/* Animated Label */}
       <span
-        className={`mr-3 px-3.5 py-1.5 rounded-full bg-white text-navy font-semibold text-xs shadow-xl border border-slate-200 transition-all duration-300 pointer-events-none ${
+        className={`mr-3 px-3.5 py-1.5 rounded-full bg-white text-ink font-semibold text-xs shadow-xl border border-muted/30 transition-all duration-300 pointer-events-none ${
           isHovered
             ? "opacity-100 translate-x-0 scale-100"
             : "opacity-0 translate-x-3 scale-95"

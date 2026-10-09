@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import PageBanner from "../components/PageBanner";
 import Lightbox from "../components/Lightbox";
+import ChapterAnchor from "../components/daq/ChapterAnchor";
 import {
   Camera,
   Sparkles,
@@ -140,7 +141,7 @@ export default function EventsPage() {
         description="Celebrating milestones, achievements, and corporate joy at Leanquality Solutions India Pvt. Ltd. Browse photo moments from our team gatherings and ceremonies in Pune."
       />
 
-      <main className="min-h-screen bg-lightBg">
+      <main className="min-h-screen bg-mono-50">
         {/* ---------- SECTION: Banner ---------- */}
         <PageBanner
           badge="Life at LQSIPL"
@@ -149,94 +150,98 @@ export default function EventsPage() {
         />
 
         {/* ---------- SECTION: Intro Narrative ---------- */}
-        <section className="py-12 bg-white border-b border-slate-200/60">
+        <section className="py-16 bg-white border-b border-mono-200">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="w-12 h-12 rounded-full bg-gold/15 text-primary flex items-center justify-center mx-auto mb-4">
+            <ChapterAnchor chapter="01" title="Company Narrative" dark={false} className="mb-6 justify-center" />
+            <div className="w-12 h-12 rounded-xl bg-mono-100 text-black flex items-center justify-center mx-auto mb-6 border border-mono-200">
               <Camera className="w-6 h-6" />
             </div>
-            <p className="text-sm sm:text-base text-bodyText leading-relaxed mb-4">
+            <p className="text-sm sm:text-base text-mono-600 leading-relaxed mb-4">
               Celebrating the achievements and happy events of our employees is a cherished tradition at our company. We take immense pride in acknowledging the remarkable milestones and accomplishments of our team members. Whether it&apos;s a work anniversary, a personal achievement, or a professional success, we believe in the power of recognition.
             </p>
-            <p className="text-sm sm:text-base text-bodyText leading-relaxed">
+            <p className="text-sm sm:text-base text-mono-600 leading-relaxed">
               These moments not only highlight the dedication and hard work of our employees but also foster a sense of belonging and camaraderie within our organization. We firmly believe that our people are our most valuable asset, and their joyous occasions are a cause for celebration that brings our entire company closer together.
             </p>
           </div>
         </section>
 
         {/* ---------- SECTION: Photo Gallery Grid ---------- */}
-        <section className="py-16 lg:py-20">
+        <section className="py-16 lg:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+            <ChapterAnchor chapter="02" title="Photo Archive" dark={false} className="mb-8" />
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-                  Photo Archive
-                </span>
-                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-heading mt-1">
+                <h2 className="font-heading text-2xl sm:text-3xl font-bold text-black">
                   Moments & Milestones
                 </h2>
+                <div className="w-16 h-0.5 bg-mono-300 mt-2 rounded-full" />
               </div>
-              <p className="text-xs text-bodyText max-w-sm">
-                Click any photo to open full-screen preview with narrative captions and gallery navigation.
+              <p className="text-xs text-mono-500 max-w-sm font-mono uppercase tracking-wider">
+                Click photo for full-screen preview with narrative captions.
               </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {galleryItems.map((item, index) => (
-                <div
-                  key={item.id}
-                  onClick={() => openLightbox(index)}
-                  className="group relative bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col"
-                >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
-                    <img
-                      src={item.src}
-                      alt={item.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-navy/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <span className="p-3 rounded-full bg-white/90 text-primary shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                        <ZoomIn className="w-5 h-5" />
+              {galleryItems.map((item, index) => {
+                const monoIndex = String(item.id).padStart(3, "0");
+                return (
+                  <div
+                    key={item.id}
+                    onClick={() => openLightbox(index)}
+                    className="group relative bg-white rounded-2xl overflow-hidden border border-mono-200 shadow-sm hover:shadow-md hover:border-mono-400 transition-all duration-300 cursor-pointer flex flex-col"
+                  >
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-mono-100">
+                      <img
+                        src={item.src}
+                        alt={item.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <span className="p-3 rounded-full bg-white/90 text-black shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                          <ZoomIn className="w-5 h-5" />
+                        </span>
+                      </div>
+                      <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider bg-black/80 text-white backdrop-blur-sm border border-white/10">
+                        {item.category}
                       </span>
                     </div>
-                    <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white/90 text-primary backdrop-blur-sm shadow-sm">
-                      {item.category}
-                    </span>
-                  </div>
 
-                  <div className="p-4 flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-1.5 text-[11px] text-bodyText mb-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-primary" />
-                        <span>{item.date}</span>
+                    <div className="p-5 flex-1 flex flex-col justify-between">
+                      <div>
+                        {/* DAQ mono caption line: "001 — Title" */}
+                        <div className="flex items-center justify-between text-[11px] font-mono text-mono-500 mb-2">
+                          <span className="text-black font-semibold">{monoIndex} — {item.category}</span>
+                          <span>{item.date}</span>
+                        </div>
+                        <h3 className="font-heading font-bold text-black text-sm line-clamp-1 group-hover:text-mono-600 transition-colors">
+                          {item.title}
+                        </h3>
+                        <p className="text-xs text-mono-600 line-clamp-2 mt-1.5 leading-relaxed">
+                          {item.description}
+                        </p>
                       </div>
-                      <h3 className="font-heading font-bold text-heading text-sm line-clamp-1 group-hover:text-primary transition-colors">
-                        {item.title}
-                      </h3>
-                      <p className="text-xs text-bodyText line-clamp-2 mt-1">
-                        {item.description}
-                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* ---------- SECTION: Join Us Banner ---------- */}
-            <div className="mt-16 bg-navy text-white rounded-2xl p-8 md:p-10 text-center relative overflow-hidden">
+            <div className="mt-16 bg-mono-950 text-white rounded-2xl p-8 md:p-12 text-center relative overflow-hidden cad-grid border border-white/10">
               <div className="relative z-10 max-w-2xl mx-auto">
-                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-3 text-gold">
+                <div className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center mx-auto mb-4 text-white">
                   <Sparkles className="w-5 h-5" />
                 </div>
-                <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3 text-yellowLight">
+                <h3 className="font-heading text-xl sm:text-2xl font-bold mb-3 text-white">
                   Be a part of our next milestone!
                 </h3>
-                <p className="text-sm text-slate-300 mb-6 leading-relaxed">
+                <p className="text-sm text-white/70 mb-8 leading-relaxed">
                   Join our supportive engineering and marketing culture in Pune. We are always welcoming passionate individuals who believe in quality and excellence.
                 </p>
                 <Link
                   to="/career"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gold text-navy font-semibold text-sm hover:bg-yellowLight transition-colors shadow-md"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-black font-mono text-xs uppercase tracking-[0.2em] font-bold hover:shadow-whiteGlow transition-all"
                 >
                   Explore Open Careers
                 </Link>

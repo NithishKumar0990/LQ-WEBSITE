@@ -84,12 +84,12 @@ export default function JobModal({ isOpen, onClose, job }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/60 backdrop-blur-sm animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto p-6 md:p-8 relative border border-mono-200">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-heading hover:bg-slate-100 transition-colors"
+          className="absolute top-5 right-5 p-2 rounded-full text-mono-400 hover:text-black hover:bg-mono-100 transition-colors"
           aria-label="Close application modal"
         >
           <X className="w-5 h-5" />
@@ -97,13 +97,13 @@ export default function JobModal({ isOpen, onClose, job }) {
 
         {/* Modal Header */}
         <div className="mb-6 pr-8">
-          <span className="text-xs font-semibold px-2.5 py-0.5 bg-primary/10 text-primary rounded-full uppercase tracking-wider">
+          <span className="text-xs font-semibold px-2.5 py-0.5 bg-mono-100 text-mono-900 rounded-full uppercase tracking-wider border border-mono-200">
             Job Application
           </span>
-          <h3 className="font-heading text-2xl font-bold text-heading mt-2">
+          <h3 className="font-heading text-2xl font-bold text-black mt-2">
             Apply for {job.title}
           </h3>
-          <p className="text-xs text-bodyText mt-1">
+          <p className="text-xs text-mono-600 mt-1">
             Fill in the details below. Our technical recruitment team will review your qualifications promptly.
           </p>
         </div>
@@ -151,7 +151,7 @@ export default function JobModal({ isOpen, onClose, job }) {
             />
 
             <div>
-              <label className="block text-xs font-semibold text-heading mb-1.5">
+              <label className="block text-xs font-semibold text-black mb-1.5">
                 Full Name <span className="text-rose-500">*</span>
               </label>
               <input
@@ -159,13 +159,13 @@ export default function JobModal({ isOpen, onClose, job }) {
                 name="name"
                 required
                 placeholder="Your full name"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-heading placeholder:text-slate-400"
+                className="w-full px-4 py-2.5 rounded-lg border border-mono-300 focus:outline-none focus:ring-2 focus:ring-mono-400 focus:border-mono-900 text-sm text-black placeholder:text-mono-400"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-heading mb-1.5">
+                <label className="block text-xs font-semibold text-black mb-1.5">
                   Email Address <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -173,11 +173,11 @@ export default function JobModal({ isOpen, onClose, job }) {
                   name="email"
                   required
                   placeholder="your.email@example.com"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-heading placeholder:text-slate-400"
+                  className="w-full px-4 py-2.5 rounded-lg border border-mono-300 focus:outline-none focus:ring-2 focus:ring-mono-400 focus:border-mono-900 text-sm text-black placeholder:text-mono-400"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-heading mb-1.5">
+                <label className="block text-xs font-semibold text-black mb-1.5">
                   Phone Number <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -185,40 +185,40 @@ export default function JobModal({ isOpen, onClose, job }) {
                   name="phone"
                   required
                   placeholder="+91 XXXXX XXXXX"
-                  className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-heading placeholder:text-slate-400"
+                  className="w-full px-4 py-2.5 rounded-lg border border-mono-300 focus:outline-none focus:ring-2 focus:ring-mono-400 focus:border-mono-900 text-sm text-black placeholder:text-mono-400"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-heading mb-1.5">
+              <label className="block text-xs font-semibold text-black mb-1.5">
                 Position
               </label>
               <input
                 type="text"
                 disabled
                 value={job.title}
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 text-sm font-medium"
+                className="w-full px-4 py-2.5 rounded-lg border border-mono-200 bg-mono-50 text-mono-600 text-sm font-medium"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-heading mb-1.5">
+              <label className="block text-xs font-semibold text-black mb-1.5">
                 Cover Letter
               </label>
               <textarea
                 name="coverletter"
                 rows={3}
                 placeholder="Briefly describe why you're a good fit for this position..."
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm text-heading placeholder:text-slate-400"
+                className="w-full px-4 py-2.5 rounded-lg border border-mono-300 focus:outline-none focus:ring-2 focus:ring-mono-400 focus:border-mono-900 text-sm text-black placeholder:text-mono-400"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-heading mb-1.5">
+              <label className="block text-xs font-semibold text-black mb-1.5">
                 Resume Upload (.pdf, .doc, .docx - max 5MB)
               </label>
-              <div className="relative border-2 border-dashed border-slate-300 hover:border-primary rounded-xl p-4 text-center cursor-pointer transition-colors bg-slate-50 hover:bg-primary/5">
+              <div className="relative border-2 border-dashed border-mono-300 hover:border-mono-900 rounded-xl p-4 text-center cursor-pointer transition-colors bg-mono-50 hover:bg-mono-100">
                 <input
                   type="file"
                   name="attachment"
@@ -227,11 +227,11 @@ export default function JobModal({ isOpen, onClose, job }) {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
                 <div className="flex flex-col items-center justify-center gap-1.5 pointer-events-none">
-                  <Upload className="w-5 h-5 text-primary" />
-                  <span className="text-xs font-medium text-heading">
+                  <Upload className="w-5 h-5 text-mono-900" />
+                  <span className="text-xs font-medium text-black">
                     {selectedFile ? selectedFile.name : "Click or drag resume file here"}
                   </span>
-                  <span className="text-[11px] text-bodyText">
+                  <span className="text-[11px] text-mono-500">
                     Max size: 5MB
                   </span>
                 </div>
@@ -245,7 +245,7 @@ export default function JobModal({ isOpen, onClose, job }) {
               <button
                 type="submit"
                 disabled={isSubmitting || !!fileError}
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-white font-medium hover:bg-navy hover:text-gold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-primary/20"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-black text-white font-mono text-xs uppercase tracking-[0.2em] font-bold hover:bg-mono-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
               >
                 {isSubmitting ? (
                   <>
